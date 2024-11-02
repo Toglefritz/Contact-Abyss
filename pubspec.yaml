@@ -22,3 +22,5 @@ flutter:
 
   assets:
      - assets/
+     - assets/game_data/
+     - assets/images/
