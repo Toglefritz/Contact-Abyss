@@ -1,0 +1,6 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+linter:
+  rules:
+    sort_constructors_first: false
+    lines_longer_than_80_chars: false

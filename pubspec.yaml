@@ -1,0 +1,24 @@
+name: contact_abyss
+description: "A text-based adventure game."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  # Provides lint rules used internally at Very Good Ventures.
+  very_good_analysis: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+     - assets/
