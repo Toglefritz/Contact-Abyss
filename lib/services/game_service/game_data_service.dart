@@ -1,8 +1,7 @@
 import 'dart:convert';
-
 import 'package:contact_abyss/services/game_service/models/choice.dart';
 import 'package:contact_abyss/services/game_service/models/game_node.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 /// A service class responsible for managing the game data n-ary tree and tracking the player's progress through the game.
@@ -80,13 +79,6 @@ class GameDataService {
       _history
         ..clear()
         ..add('start');
-
-      // Initialize battery level from the start node's sensor data, if available.
-      if (_currentNode!.sensorData != null) {
-        _batteryLevel = _currentNode!.sensorData!.batteryLevel;
-      } else {
-        _batteryLevel = 100; // Default battery level
-      }
     } catch (e) {
       throw FormatException('Failed to load game data: $e');
     }
@@ -113,6 +105,9 @@ class GameDataService {
       throw FlutterError('Failed to load game data with exception, $e; $s');
     }
   }
+
+  /// Determines if the game data has been loaded by checking if the list of nodes is not empty.
+  bool get isGameLoaded => _nodes.isNotEmpty;
 
   /// Retrieves the current [GameNode] the player is on.
   ///
@@ -181,12 +176,8 @@ class GameDataService {
       ..clear()
       ..add('start');
 
-    // Reset battery level from the start node's sensor data, if available.
-    if (_currentNode!.sensorData != null) {
-      _batteryLevel = _currentNode!.sensorData!.batteryLevel;
-    } else {
-      _batteryLevel = 100; // Default battery level
-    }
+    // Reset battery level to 100%.
+    _batteryLevel = 100;
   }
 
   /// Retrieves a [GameNode] by its unique [nodeId].

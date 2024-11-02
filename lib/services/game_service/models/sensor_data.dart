@@ -4,9 +4,6 @@
 /// [SensorData] includes various environmental readings and status indicators
 /// that influence the player's decisions and the game's progression.
 class SensorData {
-  /// The current battery level of the probe, represented as a percentage.
-  final int batteryLevel;
-
   /// The current radiation level detected, represented as a string descriptor.
   ///
   /// Examples include "Low", "Moderate", "High", etc.
@@ -23,7 +20,6 @@ class SensorData {
   /// - [radiationLevel]: Optional radiation level descriptor.
   /// - [additionalData]: Optional map of additional sensor data.
   SensorData({
-    required this.batteryLevel,
     this.radiationLevel,
     this.additionalData,
   });
@@ -38,7 +34,6 @@ class SensorData {
   /// Returns a new instance of [SensorData].
   factory SensorData.fromJson(Map<String, dynamic> json) {
     return SensorData(
-      batteryLevel: json['battery_level'] as int,
       radiationLevel: json['radiation_level'] as String?,
       additionalData: json['additional_data'] != null
           ? Map<String, dynamic>.from(json['additional_data'] as Map)
@@ -53,7 +48,6 @@ class SensorData {
   /// Returns a `Map<String, dynamic>` representing the sensor data.
   Map<String, dynamic> toJson() {
     return {
-      'battery_level': batteryLevel,
       if (radiationLevel != null) 'radiation_level': radiationLevel,
       if (additionalData != null) 'additional_data': additionalData,
     };
