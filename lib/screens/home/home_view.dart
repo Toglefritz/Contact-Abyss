@@ -22,6 +22,13 @@ class HomeView extends StatelessWidget {
             width: double.infinity,
             height: double.infinity,
           ),
+
+          // A translucent container to overlay the background image and provide contrast for the text.
+          Container(
+            color: Colors.black.withOpacity(0.3),
+            width: double.infinity,
+            height: double.infinity,
+          ),
         ],
       ),
     );

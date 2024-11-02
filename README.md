@@ -1,5 +1,7 @@
 # Contact Abyss
 
+![App Icon](assets/app_icon.png)
+
 ## Overview
 
 **Contact Abyss** is an immersive text-based adventure game developed using Flutter for iOS and a
