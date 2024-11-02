@@ -1,0 +1,1557 @@
+{
+  "title": "Europa Explorer: Hunt for Life",
+  "nodes": [
+    {
+      "id": "start",
+      "story_text": "You are the Europa Explorer Probe, tasked with drilling through Europa's icy crust to explore its subsurface ocean. Your mission is to collect sensor data, search for signs of life, and transmit your findings back to Earth. You begin your descent from the landing module.",
+      "sensor_data": {
+        "battery_level": 100
+      },
+      "choices": [
+        {
+          "choice_text": "Initiate drilling sequence to bore through the ice crust.",
+          "target": "drilling_start"
+        },
+        {
+          "choice_text": "Conduct a preliminary scan of the ice surface before drilling.",
+          "target": "preliminary_scan"
+        }
+      ]
+    },
+    {
+      "id": "preliminary_scan",
+      "story_text": "Your preliminary scan reveals thick ice with potential structural weaknesses that could facilitate drilling. However, it also detects increased radiation levels beneath the surface.",
+      "sensor_data": {
+        "radiation_level": "High",
+        "battery_level": 95
+      },
+      "choices": [
+        {
+          "choice_text": "Proceed with drilling, ignoring the high radiation levels.",
+          "target": "drilling_start_risky"
+        },
+        {
+          "choice_text": "Adjust drilling parameters to account for the high radiation.",
+          "target": "drilling_adjusted"
+        }
+      ]
+    },
+    {
+      "id": "drilling_start",
+      "story_text": "Drilling commenced. The ice is denser than expected, putting strain on your systems.",
+      "sensor_data": {
+        "battery_level": 90
+      },
+      "choices": [
+        {
+          "choice_text": "Continue drilling at current speed.",
+          "target": "drilling_continued"
+        },
+        {
+          "choice_text": "Slow down drilling to conserve energy.",
+          "target": "drilling_slowed"
+        }
+      ]
+    },
+    {
+      "id": "drilling_start_risky",
+      "story_text": "You proceeded with drilling despite the high radiation levels. Unexpectedly, a radiation surge damages your communication array.",
+      "sensor_data": {
+        "battery_level": 80
+      },
+      "choices": [
+        {
+          "choice_text": "Attempt to repair the communication array.",
+          "target": "repair_comm_array"
+        },
+        {
+          "choice_text": "Proceed without the communication array.",
+          "target": "proceed_without_comm"
+        }
+      ]
+    },
+    {
+      "id": "drilling_adjusted",
+      "story_text": "You adjusted the drilling parameters to mitigate radiation exposure. This reduces strain on your systems but slows down the drilling process.",
+      "sensor_data": {
+        "battery_level": 85
+      },
+      "choices": [
+        {
+          "choice_text": "Continue drilling with adjusted parameters.",
+          "target": "drilling_continued_adjusted"
+        },
+        {
+          "choice_text": "Pause drilling to perform maintenance.",
+          "target": "maintenance_pause"
+        }
+      ]
+    },
+    {
+      "id": "drilling_continued",
+      "story_text": "You continued drilling at the current speed. Suddenly, an ice fracture forms nearby, causing a temporary power outage.",
+      "sensor_data": {
+        "battery_level": 75
+      },
+      "choices": [
+        {
+          "choice_text": "Wait for power to restore.",
+          "target": "wait_power_restore"
+        },
+        {
+          "choice_text": "Attempt to navigate around the ice fracture.",
+          "target": "navigate_ice_fracture"
+        }
+      ]
+    },
+    {
+      "id": "drilling_slowed",
+      "story_text": "You slowed down the drilling, conserving energy. The descent becomes more manageable, and battery levels stabilize.",
+      "sensor_data": {
+        "battery_level": 80
+      },
+      "choices": [
+        {
+          "choice_text": "Continue drilling at the slower pace.",
+          "target": "drilling_continued_slow"
+        },
+        {
+          "choice_text": "Perform a system diagnostic.",
+          "target": "system_diagnostic"
+        }
+      ]
+    },
+    {
+      "id": "repair_comm_array",
+      "story_text": "Attempting to repair the communication array was unsuccessful. You can no longer transmit data to Earth.",
+      "sensor_data": {
+        "battery_level": 70
+      },
+      "choices": [
+        {
+          "choice_text": "Continue mission objectives without communication.",
+          "target": "proceed_without_comm"
+        },
+        {
+          "choice_text": "Seek alternative methods to restore communication.",
+          "target": "alternative_comm_restore"
+        }
+      ]
+    },
+    {
+      "id": "proceed_without_comm",
+      "story_text": "Without communication capabilities, you focus solely on exploring and collecting data. Your mission becomes more autonomous but limits data transmission.",
+      "sensor_data": {
+        "battery_level": 65
+      },
+      "choices": [
+        {
+          "choice_text": "Explore the nearby environment for anomalies.",
+          "target": "explore_anomalies"
+        },
+        {
+          "choice_text": "Return to the communication array to attempt a final transmission.",
+          "target": "return_to_comm_array"
+        }
+      ]
+    },
+    {
+      "id": "drilling_continued_adjusted",
+      "story_text": "Continuing drilling with adjusted parameters, you successfully penetrate deeper into the ice. The descent becomes increasingly challenging.",
+      "sensor_data": {
+        "battery_level": 70
+      },
+      "choices": [
+        {
+          "choice_text": "Push forward to reach the ocean.",
+          "target": "push_forward"
+        },
+        {
+          "choice_text": "Assess structural integrity before proceeding.",
+          "target": "assess_integrity"
+        }
+      ]
+    },
+    {
+      "id": "maintenance_pause",
+      "story_text": "Pausing for maintenance restores some of your systems and slightly recharges your battery.",
+      "sensor_data": {
+        "battery_level": 75
+      },
+      "choices": [
+        {
+          "choice_text": "Resume drilling after maintenance.",
+          "target": "resume_drilling"
+        },
+        {
+          "choice_text": "Proceed to explore without further drilling.",
+          "target": "explore_without_drilling"
+        }
+      ]
+    },
+    {
+      "id": "wait_power_restore",
+      "story_text": "You waited patiently for power to restore. After a short period, systems are back online, but some sensors remain offline.",
+      "sensor_data": {
+        "battery_level": 70
+      },
+      "choices": [
+        {
+          "choice_text": "Resume drilling cautiously.",
+          "target": "drilling_cautious_resume"
+        },
+        {
+          "choice_text": "Seek alternative paths around the ice fracture.",
+          "target": "alternative_paths"
+        }
+      ]
+    },
+    {
+      "id": "navigate_ice_fracture",
+      "story_text": "Attempting to navigate around the ice fracture led you into a narrower passage with unpredictable currents. Systems begin to overheat due to increased friction.",
+      "sensor_data": {
+        "battery_level": 60
+      },
+      "choices": [
+        {
+          "choice_text": "Fight against the currents to stabilize your path.",
+          "target": "fight_currents"
+        },
+        {
+          "choice_text": "Abandon the current path and return to previous location.",
+          "target": "return_previous"
+        }
+      ]
+    },
+    {
+      "id": "drilling_continued_slow",
+      "story_text": "Drilling at a slower pace, you conserve energy effectively. The descent is smooth, and battery levels remain stable.",
+      "sensor_data": {
+        "battery_level": 75
+      },
+      "choices": [
+        {
+          "choice_text": "Continue drilling steadily towards the ocean.",
+          "target": "continue_drilling_steady"
+        },
+        {
+          "choice_text": "Initiate a scan of the surrounding ice layers.",
+          "target": "scan_ice_layers"
+        }
+      ]
+    },
+    {
+      "id": "system_diagnostic",
+      "story_text": "Performing a system diagnostic revealed minor issues in the propulsion module, which you successfully repaired. Battery levels remain stable.",
+      "sensor_data": {
+        "battery_level": 80
+      },
+      "choices": [
+        {
+          "choice_text": "Proceed with drilling after diagnostic.",
+          "target": "drilling_after_diagnostic"
+        },
+        {
+          "choice_text": "Pause to monitor system performance.",
+          "target": "monitor_system"
+        }
+      ]
+    },
+    {
+      "id": "alternative_comm_restore",
+      "story_text": "Seeking alternative methods, you attempt to reroute power from non-essential systems to the communication array. Partially successful, you regain limited communication capabilities.",
+      "sensor_data": {
+        "battery_level": 65
+      },
+      "choices": [
+        {
+          "choice_text": "Transmit vital data back to Earth.",
+          "target": "transmit_data"
+        },
+        {
+          "choice_text": "Use limited communication to request assistance.",
+          "target": "request_assistance"
+        }
+      ]
+    },
+    {
+      "id": "explore_anomalies",
+      "story_text": "Exploring the nearby environment, you detect unusual thermal patterns and chemical signatures that may indicate biological activity.",
+      "sensor_data": {
+        "battery_level": 60
+      },
+      "choices": [
+        {
+          "choice_text": "Investigate the thermal anomalies further.",
+          "target": "investigate_thermal"
+        },
+        {
+          "choice_text": "Analyze chemical signatures remotely.",
+          "target": "analyze_chemicals"
+        }
+      ]
+    },
+    {
+      "id": "return_to_comm_array",
+      "story_text": "Attempting to return to the communication array, you realize that the descent path has become unstable. Battery levels are critically low.",
+      "sensor_data": {
+        "battery_level": 30
+      },
+      "choices": [
+        {
+          "choice_text": "Make a final push to reach the communication array.",
+          "target": "final_push"
+        },
+        {
+          "choice_text": "Abort mission and conserve remaining battery.",
+          "target": "abort_mission"
+        }
+      ]
+    },
+    {
+      "id": "push_forward",
+      "story_text": "Pushing forward, you successfully breach the ice crust and enter the subsurface ocean. The environment is dark and pressurized.",
+      "sensor_data": {
+        "battery_level": 65
+      },
+      "choices": [
+        {
+          "choice_text": "Deploy camera to survey the ocean floor.",
+          "target": "deploy_camera"
+        },
+        {
+          "choice_text": "Activate chemical sensors to analyze water composition.",
+          "target": "activate_chem_sensors"
+        }
+      ]
+    },
+    {
+      "id": "assess_integrity",
+      "story_text": "Assessing structural integrity, you detect minor fractures that could jeopardize the descent if not addressed.",
+      "sensor_data": {
+        "battery_level": 60
+      },
+      "choices": [
+        {
+          "choice_text": "Reinforce drilling apparatus to stabilize descent.",
+          "target": "reinforce_drilling"
+        },
+        {
+          "choice_text": "Proceed cautiously without reinforcement.",
+          "target": "proceed_cautious"
+        }
+      ]
+    },
+    {
+      "id": "resume_drilling",
+      "story_text": "Resuming drilling after maintenance, you make steady progress towards the ocean. Battery levels are stable.",
+      "sensor_data": {
+        "battery_level": 80
+      },
+      "choices": [
+        {
+          "choice_text": "Continue drilling towards the ocean.",
+          "target": "continue_drilling_steady"
+        },
+        {
+          "choice_text": "Conduct a comprehensive environmental scan.",
+          "target": "comprehensive_scan"
+        }
+      ]
+    },
+    {
+      "id": "explore_without_drilling",
+      "story_text": "Exploring without further drilling, you map the surrounding ice structures and detect potential pathways to the ocean.",
+      "sensor_data": {
+        "battery_level": 70
+      },
+      "choices": [
+        {
+          "choice_text": "Choose the most promising pathway towards the ocean.",
+          "target": "choose_pathway"
+        },
+        {
+          "choice_text": "Mark the pathways for future exploration and continue mapping.",
+          "target": "continue_mapping"
+        }
+      ]
+    },
+    {
+      "id": "drilling_continued_adjusted",
+      "story_text": "Continuing with adjusted parameters, you navigate through challenging ice formations but maintain steady progress.",
+      "sensor_data": {
+        "battery_level": 70
+      },
+      "choices": [
+        {
+          "choice_text": "Proceed deeper into the ice towards the ocean.",
+          "target": "proceed_deeper"
+        },
+        {
+          "choice_text": "Analyze sensor data for any anomalies before moving forward.",
+          "target": "analyze_anomalies_before"
+        }
+      ]
+    },
+    {
+      "id": "continue_drilling_steady",
+      "story_text": "You continue drilling steadily towards the ocean, maintaining optimal battery levels and system performance.",
+      "sensor_data": {
+        "battery_level": 70
+      },
+      "choices": [
+        {
+          "choice_text": "Push through the final layers to reach the ocean.",
+          "target": "push_final_layers"
+        },
+        {
+          "choice_text": "Prepare for environmental scanning upon reaching the ocean.",
+          "target": "prepare_scanning"
+        }
+      ]
+    },
+    {
+      "id": "drilling_after_diagnostic",
+      "story_text": "After the diagnostic, systems are optimized. You resume drilling with improved efficiency.",
+      "sensor_data": {
+        "battery_level": 80
+      },
+      "choices": [
+        {
+          "choice_text": "Continue drilling with renewed energy.",
+          "target": "continue_drilling_efficiency"
+        },
+        {
+          "choice_text": "Conduct a secondary scan of the ice crust.",
+          "target": "secondary_scan"
+        }
+      ]
+    },
+    {
+      "id": "monitor_system",
+      "story_text": "Monitoring system performance reveals stable conditions. You decide to proceed with your mission objectives.",
+      "sensor_data": {
+        "battery_level": 75
+      },
+      "choices": [
+        {
+          "choice_text": "Proceed with drilling towards the ocean.",
+          "target": "proceed_with_drilling"
+        },
+        {
+          "choice_text": "Focus on collecting comprehensive sensor data.",
+          "target": "collect_sensor_data"
+        }
+      ]
+    },
+    {
+      "id": "transmit_data",
+      "story_text": "You transmit vital data back to Earth, but the communication array remains partially damaged. Data transmission is limited.",
+      "sensor_data": {
+        "battery_level": 60
+      },
+      "choices": [
+        {
+          "choice_text": "Use remaining communication capabilities to send essential findings.",
+          "target": "send_essential_findings"
+        },
+        {
+          "choice_text": "Preserve remaining battery by minimizing data transmission.",
+          "target": "minimize_transmission"
+        }
+      ]
+    },
+    {
+      "id": "request_assistance",
+      "story_text": "Using limited communication, you request assistance from Earth. A response is pending, but battery levels are decreasing rapidly.",
+      "sensor_data": {
+        "battery_level": 50
+      },
+      "choices": [
+        {
+          "choice_text": "Wait for a response while conserving energy.",
+          "target": "wait_response"
+        },
+        {
+          "choice_text": "Proceed with mission objectives to maximize data collection.",
+          "target": "maximize_data_collection"
+        }
+      ]
+    },
+    {
+      "id": "investigate_thermal",
+      "story_text": "Investigating thermal anomalies, you discover regions of warmer water, possibly indicating hydrothermal vents—a potential sign of life.",
+      "sensor_data": {
+        "battery_level": 55
+      },
+      "choices": [
+        {
+          "choice_text": "Deploy additional sensors near the hydrothermal vents.",
+          "target": "deploy_additional_sensors"
+        },
+        {
+          "choice_text": "Collect water samples for chemical analysis.",
+          "target": "collect_water_samples"
+        }
+      ]
+    },
+    {
+      "id": "analyze_chemicals",
+      "story_text": "Analyzing chemical signatures remotely, you detect high concentrations of methane and organic compounds, which are promising indicators of life.",
+      "sensor_data": {
+        "battery_level": 50
+      },
+      "choices": [
+        {
+          "choice_text": "Mark this location for detailed exploration.",
+          "target": "mark_location_exploration"
+        },
+        {
+          "choice_text": "Prioritize returning to the communication array with this data.",
+          "target": "prioritize_return"
+        }
+      ]
+    },
+    {
+      "id": "push_final_layers",
+      "story_text": "Pushing through the final layers, you breach the ice and enter Europa's vast subsurface ocean. The environment is cold, dark, and filled with mysterious structures.",
+      "sensor_data": {
+        "battery_level": 60
+      },
+      "choices": [
+        {
+          "choice_text": "Activate high-resolution cameras to survey the surroundings.",
+          "target": "activate_cameras"
+        },
+        {
+          "choice_text": "Deploy chemical sensors to analyze water composition.",
+          "target": "deploy_chem_sensors"
+        }
+      ]
+    },
+    {
+      "id": "prepare_scanning",
+      "story_text": "You prepare to activate environmental scanning tools upon reaching the ocean, ensuring comprehensive data collection.",
+      "sensor_data": {
+        "battery_level": 65
+      },
+      "choices": [
+        {
+          "choice_text": "Proceed to reach the ocean floor.",
+          "target": "proceed_ocean_floor"
+        },
+        {
+          "choice_text": "Reallocate resources to enhance scanning capabilities.",
+          "target": "enhance_scanning_resources"
+        }
+      ]
+    },
+    {
+      "id": "continue_drilling_efficiency",
+      "story_text": "With improved efficiency, you make swift progress towards the ocean. Battery levels remain stable.",
+      "sensor_data": {
+        "battery_level": 80
+      },
+      "choices": [
+        {
+          "choice_text": "Continue drilling to reach the ocean.",
+          "target": "reach_ocean"
+        },
+        {
+          "choice_text": "Conduct an in-depth environmental scan before proceeding.",
+          "target": "in_depth_scan"
+        }
+      ]
+    },
+    {
+      "id": "secondary_scan",
+      "story_text": "The secondary scan reveals intricate ice formations and minor thermal anomalies beneath the surface.",
+      "sensor_data": {
+        "battery_level": 75
+      },
+      "choices": [
+        {
+          "choice_text": "Focus drilling on areas with thermal anomalies.",
+          "target": "drill_thermal_areas"
+        },
+        {
+          "choice_text": "Ignore anomalies and proceed straight to the ocean.",
+          "target": "ignore_anomalies"
+        }
+      ]
+    },
+    {
+      "id": "continue_drilling_steady",
+      "story_text": "Drilling steadily, you approach the subsurface ocean. Battery levels are sufficient for the next phase of the mission.",
+      "sensor_data": {
+        "battery_level": 70
+      },
+      "choices": [
+        {
+          "choice_text": "Initiate breach through the final ice layers.",
+          "target": "initiate_breach"
+        },
+        {
+          "choice_text": "Conduct a final system check before breaching.",
+          "target": "final_system_check"
+        }
+      ]
+    },
+    {
+      "id": "initiate_breach",
+      "story_text": "Initiating breach... Success! You have entered Europa's subsurface ocean. The environment is alien and full of unknown possibilities.",
+      "sensor_data": {
+        "battery_level": 65
+      },
+      "choices": [
+        {
+          "choice_text": "Deploy cameras to capture imagery of the ocean floor.",
+          "target": "deploy_cameras_ocean"
+        },
+        {
+          "choice_text": "Activate chemical sensors to analyze water composition.",
+          "target": "activate_chem_sensors_ocean"
+        }
+      ]
+    },
+    {
+      "id": "final_system_check",
+      "story_text": "Final system checks complete. All systems operational. Proceeding to breach into the ocean.",
+      "sensor_data": {
+        "battery_level": 70
+      },
+      "choices": [
+        {
+          "choice_text": "Breach into the subsurface ocean.",
+          "target": "initiate_breach"
+        },
+        {
+          "choice_text": "Conduct an additional scan of the ice before breaching.",
+          "target": "additional_ice_scan"
+        }
+      ]
+    },
+    {
+      "id": "deploy_cameras_ocean",
+      "story_text": "Cameras deployed. The ocean floor is teeming with strange geological formations and occasional bioluminescent activity.",
+      "sensor_data": {
+        "battery_level": 60
+      },
+      "choices": [
+        {
+          "choice_text": "Investigate areas with bioluminescent activity.",
+          "target": "investigate_bioluminescence"
+        },
+        {
+          "choice_text": "Map the geological formations for further analysis.",
+          "target": "map_geological_formations"
+        }
+      ]
+    },
+    {
+      "id": "activate_chem_sensors_ocean",
+      "story_text": "Chemical sensors activated. You detect elevated levels of oxygen and carbon-based compounds, suggesting potential biological processes.",
+      "sensor_data": {
+        "battery_level": 55
+      },
+      "choices": [
+        {
+          "choice_text": "Focus on areas with high oxygen concentrations.",
+          "target": "focus_high_oxygen"
+        },
+        {
+          "choice_text": "Collect water samples for detailed chemical analysis.",
+          "target": "collect_water_samples_ocean"
+        }
+      ]
+    },
+    {
+      "id": "fight_currents",
+      "story_text": "Fighting against the strong underwater currents, you stabilize your path but consume additional battery power.",
+      "sensor_data": {
+        "battery_level": 40
+      },
+      "choices": [
+        {
+          "choice_text": "Continue battling the currents to reach the ocean.",
+          "target": "battle_continue"
+        },
+        {
+          "choice_text": "Retreat to conserve remaining battery.",
+          "target": "retreat_battery_conserve"
+        }
+      ]
+    },
+    {
+      "id": "return_previous",
+      "story_text": "Retreating to the previous location, you avoid further damage but delay your mission progress.",
+      "sensor_data": {
+        "battery_level": 45
+      },
+      "choices": [
+        {
+          "choice_text": "Attempt a different path towards the ocean.",
+          "target": "different_path"
+        },
+        {
+          "choice_text": "Return to the communication array to report current status.",
+          "target": "report_status"
+        }
+      ]
+    },
+    {
+      "id": "battle_continue",
+      "story_text": "Continuing to battle the currents, you eventually reach the subsurface ocean but at the cost of significant battery depletion.",
+      "sensor_data": {
+        "battery_level": 20
+      },
+      "choices": [
+        {
+          "choice_text": "Proceed to explore the ocean floor immediately.",
+          "target": "explore_ocean_floor_immediately"
+        },
+        {
+          "choice_text": "Focus on finding the communication array to transmit data.",
+          "target": "find_comm_array_immediately"
+        }
+      ]
+    },
+    {
+      "id": "retreat_battery_conserve",
+      "story_text": "Retreating to conserve battery power, you head back towards the communication array with minimal progress.",
+      "sensor_data": {
+        "battery_level": 25
+      },
+      "choices": [
+        {
+          "choice_text": "Make a final effort to reach the communication array.",
+          "target": "final_effort_comm_array"
+        },
+        {
+          "choice_text": "Initiate emergency shutdown to preserve remaining data.",
+          "target": "emergency_shutdown"
+        }
+      ]
+    },
+    {
+      "id": "final_effort_comm_array",
+      "story_text": "Making a final effort, you reach the communication array and successfully transmit critical data to Earth. Battery life is critically low.",
+      "sensor_data": {
+        "battery_level": 5
+      },
+      "choices": [
+        {
+          "choice_text": "Initiate emergency shutdown after transmission.",
+          "target": "emergency_shutdown_success"
+        }
+      ]
+    },
+    {
+      "id": "emergency_shutdown",
+      "story_text": "Initiating emergency shutdown. Data transmission incomplete. Mission terminated due to battery depletion.",
+      "sensor_data": {
+        "battery_level": 0
+      },
+      "is_end": true
+    },
+    {
+      "id": "emergency_shutdown_success",
+      "story_text": "Emergency shutdown complete. Critical data has been transmitted to Earth. Your mission concludes successfully despite battery depletion.",
+      "sensor_data": {
+        "battery_level": 0
+      },
+      "is_end": true
+    },
+    {
+      "id": "different_path",
+      "story_text": "Taking a different path, you navigate through less turbulent areas, making steady progress towards the ocean.",
+      "sensor_data": {
+        "battery_level": 35
+      },
+      "choices": [
+        {
+          "choice_text": "Continue drilling towards the ocean.",
+          "target": "continue_drilling_different_path"
+        },
+        {
+          "choice_text": "Attempt to restore partial communication capabilities.",
+          "target": "restore_partial_comm"
+        }
+      ]
+    },
+    {
+      "id": "report_status",
+      "story_text": "Returning to the communication array, you report your current status to Earth. However, battery levels are critically low.",
+      "sensor_data": {
+        "battery_level": 20
+      },
+      "choices": [
+        {
+          "choice_text": "Proceed with mission objectives despite low battery.",
+          "target": "proceed_low_battery"
+        },
+        {
+          "choice_text": "Prepare for emergency shutdown.",
+          "target": "emergency_shutdown"
+        }
+      ]
+    },
+    {
+      "id": "continue_drilling_different_path",
+      "story_text": "Continuing drilling along the different path, you breach the ice and enter the subsurface ocean. The environment is alien and filled with potential signs of life.",
+      "sensor_data": {
+        "battery_level": 35
+      },
+      "choices": [
+        {
+          "choice_text": "Deploy high-resolution cameras to survey the surroundings.",
+          "target": "deploy_cameras_ocean"
+        },
+        {
+          "choice_text": "Activate chemical sensors to analyze water composition.",
+          "target": "activate_chem_sensors_ocean"
+        }
+      ]
+    },
+    {
+      "id": "restore_partial_comm",
+      "story_text": "Attempting to restore partial communication, you regain limited data transmission capabilities.",
+      "sensor_data": {
+        "battery_level": 30
+      },
+      "choices": [
+        {
+          "choice_text": "Transmit available sensor data to Earth.",
+          "target": "transmit_partial_data"
+        },
+        {
+          "choice_text": "Use limited communication to request battery recharge assistance.",
+          "target": "request_battery_recharge"
+        }
+      ]
+    },
+    {
+      "id": "transmit_partial_data",
+      "story_text": "You transmit partial sensor data to Earth. The information provides valuable insights, but not as comprehensive as intended.",
+      "sensor_data": {
+        "battery_level": 25
+      },
+      "choices": [
+        {
+          "choice_text": "Proceed with mission objectives to gather more data.",
+          "target": "proceed_more_data"
+        },
+        {
+          "choice_text": "Initiate emergency shutdown to preserve remaining data.",
+          "target": "emergency_shutdown"
+        }
+      ]
+    },
+    {
+      "id": "request_battery_recharge",
+      "story_text": "Requesting battery recharge assistance, you await a response from Earth. Battery levels are dangerously low.",
+      "sensor_data": {
+        "battery_level": 15
+      },
+      "choices": [
+        {
+          "choice_text": "Attempt to conserve remaining battery by minimizing operations.",
+          "target": "conserve_battery"
+        },
+        {
+          "choice_text": "Proceed with mission objectives despite low battery.",
+          "target": "proceed_low_battery"
+        }
+      ]
+    },
+    {
+      "id": "proceed_more_data",
+      "story_text": "Proceeding to gather more data, you extend your mission duration, but battery depletion accelerates.",
+      "sensor_data": {
+        "battery_level": 10
+      },
+      "choices": [
+        {
+          "choice_text": "Make a final attempt to return to the communication array.",
+          "target": "final_attempt_return"
+        },
+        {
+          "choice_text": "Initiate emergency shutdown to preserve remaining data.",
+          "target": "emergency_shutdown"
+        }
+      ]
+    },
+    {
+      "id": "conserve_battery",
+      "story_text": "Conserving battery by minimizing operations. You successfully preserve most of your remaining energy.",
+      "sensor_data": {
+        "battery_level": 10
+      },
+      "choices": [
+        {
+          "choice_text": "Attempt a final data transmission to Earth.",
+          "target": "final_data_transmission"
+        },
+        {
+          "choice_text": "Prepare for emergency shutdown.",
+          "target": "emergency_shutdown"
+        }
+      ]
+    },
+    {
+      "id": "final_attempt_return",
+      "story_text": "Making a final attempt to return, you struggle against the currents but manage to reach the communication array just as your battery depletes.",
+      "sensor_data": {
+        "battery_level": 0
+      },
+      "choices": [
+        {
+          "choice_text": "Transmit critical data before shutdown.",
+          "target": "transmit_critical_data_before_shutdown"
+        }
+      ]
+    },
+    {
+      "id": "transmit_critical_data_before_shutdown",
+      "story_text": "Transmitting critical data before shutdown. Your findings are successfully sent to Earth. The mission concludes as your systems power down.",
+      "sensor_data": {
+        "battery_level": 0
+      },
+      "is_end": true
+    },
+    {
+      "id": "transmit_partial_data",
+      "story_text": "You transmit partial sensor data to Earth. While some information is lost, your mission provides valuable insights into Europa's ocean.",
+      "sensor_data": {
+        "battery_level": 25
+      },
+      "choices": [
+        {
+          "choice_text": "Continue mission objectives with remaining battery.",
+          "target": "continue_with_remaining_battery"
+        },
+        {
+          "choice_text": "Initiate emergency shutdown to preserve remaining data.",
+          "target": "emergency_shutdown"
+        }
+      ]
+    },
+    {
+      "id": "continue_with_remaining_battery",
+      "story_text": "Continuing with remaining battery, you perform final scans and collect the last of your data before systems fail.",
+      "sensor_data": {
+        "battery_level": 0
+      },
+      "is_end": true
+    },
+    {
+      "id": "deploy_additional_sensors",
+      "story_text": "Deploying additional sensors near the hydrothermal vents, you gather detailed data indicating potential microbial life.",
+      "sensor_data": {
+        "battery_level": 50
+      },
+      "choices": [
+        {
+          "choice_text": "Focus on collecting biological samples.",
+          "target": "collect_biological_samples"
+        },
+        {
+          "choice_text": "Analyze data remotely to confirm signs of life.",
+          "target": "analyze_biological_data"
+        }
+      ]
+    },
+    {
+      "id": "collect_water_samples",
+      "story_text": "Collecting water samples, you store chemical compounds that suggest the presence of organic life forms.",
+      "sensor_data": {
+        "battery_level": 45
+      },
+      "choices": [
+        {
+          "choice_text": "Analyze water samples for DNA or RNA.",
+          "target": "analyze_dna_rna"
+        },
+        {
+          "choice_text": "Save samples for transmission to Earth.",
+          "target": "save_samples_for_transmission"
+        }
+      ]
+    },
+    {
+      "id": "mark_location_exploration",
+      "story_text": "Marking the location with anomalies, you set coordinates for detailed exploration when possible.",
+      "sensor_data": {
+        "battery_level": 35
+      },
+      "choices": [
+        {
+          "choice_text": "Return to communication array to transmit location data.",
+          "target": "transmit_location_data"
+        },
+        {
+          "choice_text": "Proceed to explore the marked location immediately.",
+          "target": "explore_marked_location"
+        }
+      ]
+    },
+    {
+      "id": "prioritize_return",
+      "story_text": "Prioritizing return, you initiate the journey back to the communication array with the promising data collected.",
+      "sensor_data": {
+        "battery_level": 40
+      },
+      "choices": [
+        {
+          "choice_text": "Optimize path for fastest return.",
+          "target": "optimize_return_path"
+        },
+        {
+          "choice_text": "Take a scenic route to collect more data before returning.",
+          "target": "scenic_route_collect_data"
+        }
+      ]
+    },
+    {
+      "id": "investigate_bioluminescence",
+      "story_text": "Investigating areas with bioluminescent activity, you discover glowing microorganisms thriving in the dark ocean.",
+      "sensor_data": {
+        "battery_level": 50
+      },
+      "choices": [
+        {
+          "choice_text": "Collect samples of the bioluminescent organisms.",
+          "target": "collect_biolum_samples"
+        },
+        {
+          "choice_text": "Map the distribution of bioluminescent activity.",
+          "target": "map_biolum_distribution"
+        }
+      ]
+    },
+    {
+      "id": "map_geological_formations",
+      "story_text": "Mapping the geological formations, you identify structures that could harbor life-supporting environments.",
+      "sensor_data": {
+        "battery_level": 55
+      },
+      "choices": [
+        {
+          "choice_text": "Focus exploration on these structures.",
+          "target": "focus_exploration_structures"
+        },
+        {
+          "choice_text": "Return to communication array with mapping data.",
+          "target": "transmit_mapping_data"
+        }
+      ]
+    },
+    {
+      "id": "focus_high_oxygen",
+      "story_text": "Focusing on areas with high oxygen concentrations, you find regions that may support aerobic life forms.",
+      "sensor_data": {
+        "battery_level": 40
+      },
+      "choices": [
+        {
+          "choice_text": "Deploy life-detection sensors in these regions.",
+          "target": "deploy_life_sensors"
+        },
+        {
+          "choice_text": "Collect water samples from high oxygen areas.",
+          "target": "collect_high_oxygen_samples"
+        }
+      ]
+    },
+    {
+      "id": "collect_water_samples_ocean",
+      "story_text": "Collecting water samples, you analyze them and detect complex organic molecules indicative of potential life.",
+      "sensor_data": {
+        "battery_level": 35
+      },
+      "choices": [
+        {
+          "choice_text": "Prepare to transmit chemical analysis data to Earth.",
+          "target": "transmit_chemical_data"
+        },
+        {
+          "choice_text": "Store samples for a more detailed analysis before transmission.",
+          "target": "store_samples_analysis"
+        }
+      ]
+    },
+    {
+      "id": "collect_biological_samples",
+      "story_text": "Collecting biological samples, you secure microorganisms that exhibit signs of metabolic activity.",
+      "sensor_data": {
+        "battery_level": 45
+      },
+      "choices": [
+        {
+          "choice_text": "Analyze biological samples for genetic material.",
+          "target": "analyze_genetic_material"
+        },
+        {
+          "choice_text": "Store biological samples for transmission to Earth.",
+          "target": "store_biological_samples"
+        }
+      ]
+    },
+    {
+      "id": "analyze_biological_data",
+      "story_text": "Analyzing the biological data remotely, you confirm the presence of simple life forms within Europa's ocean.",
+      "sensor_data": {
+        "battery_level": 40
+      },
+      "choices": [
+        {
+          "choice_text": "Document findings and prepare for transmission.",
+          "target": "document_and_transmit"
+        },
+        {
+          "choice_text": "Continue exploration to gather more evidence.",
+          "target": "continue_exploration_evidence"
+        }
+      ]
+    },
+    {
+      "id": "collect_dna_rna",
+      "story_text": "Analyzing DNA and RNA in the water samples, you identify sequences that resemble known life forms, providing strong evidence of life.",
+      "sensor_data": {
+        "battery_level": 30
+      },
+      "choices": [
+        {
+          "choice_text": "Transmit genetic data to Earth immediately.",
+          "target": "transmit_genetic_data"
+        },
+        {
+          "choice_text": "Secure samples for in-depth analysis before transmission.",
+          "target": "secure_samples_analysis"
+        }
+      ]
+    },
+    {
+      "id": "save_samples_for_transmission",
+      "story_text": "You secure the water samples for later transmission. However, conserving energy is becoming increasingly critical.",
+      "sensor_data": {
+        "battery_level": 35
+      },
+      "choices": [
+        {
+          "choice_text": "Return to the communication array to transmit samples.",
+          "target": "return_comm_array_with_samples"
+        },
+        {
+          "choice_text": "Continue exploration to gather more samples.",
+          "target": "continue_gathering_samples"
+        }
+      ]
+    },
+    {
+      "id": "transmit_location_data",
+      "story_text": "Transmitting the marked location data to Earth, you inform mission control of the promising areas for further exploration.",
+      "sensor_data": {
+        "battery_level": 30
+      },
+      "choices": [
+        {
+          "choice_text": "Proceed to explore the marked location immediately.",
+          "target": "explore_marked_location_immediately"
+        },
+        {
+          "choice_text": "Conserve remaining battery by minimizing operations.",
+          "target": "conserve_remaining_battery"
+        }
+      ]
+    },
+    {
+      "id": "explore_marked_location_immediately",
+      "story_text": "Exploring the marked location, you discover hydrothermal vents teeming with life, providing conclusive evidence of extraterrestrial organisms.",
+      "sensor_data": {
+        "battery_level": 25
+      },
+      "choices": [
+        {
+          "choice_text": "Collect and transmit life evidence to Earth.",
+          "target": "collect_transmit_life_evidence"
+        },
+        {
+          "choice_text": "Secure findings and prepare for shutdown.",
+          "target": "secure_shutdown"
+        }
+      ]
+    },
+    {
+      "id": "optimize_return_path",
+      "story_text": "Optimizing the return path, you navigate through the least energy-consuming route back to the communication array.",
+      "sensor_data": {
+        "battery_level": 50
+      },
+      "choices": [
+        {
+          "choice_text": "Proceed with optimized return.",
+          "target": "proceed_optimized_return"
+        },
+        {
+          "choice_text": "Take an alternative route to collect additional data.",
+          "target": "alternative_route_data"
+        }
+      ]
+    },
+    {
+      "id": "scenic_route_collect_data",
+      "story_text": "Taking the scenic route, you collect extensive data on Europa's oceanography but expend more battery power.",
+      "sensor_data": {
+        "battery_level": 35
+      },
+      "choices": [
+        {
+          "choice_text": "Focus on data transmission to Earth now.",
+          "target": "focus_data_transmission"
+        },
+        {
+          "choice_text": "Continue collecting data until battery is critically low.",
+          "target": "continue_until_low"
+        }
+      ]
+    },
+    {
+      "id": "deploy_cameras_ocean",
+      "story_text": "Deploying cameras, you capture stunning images of underwater landscapes and unidentified biological activity.",
+      "sensor_data": {
+        "battery_level": 55
+      },
+      "choices": [
+        {
+          "choice_text": "Analyze camera footage for signs of life.",
+          "target": "analyze_camera_footage"
+        },
+        {
+          "choice_text": "Mark interesting areas for future exploration.",
+          "target": "mark_interesting_areas"
+        }
+      ]
+    },
+    {
+      "id": "activate_chem_sensors_ocean",
+      "story_text": "Activating chemical sensors, you detect complex organic molecules and elevated oxygen levels, strong indicators of potential life.",
+      "sensor_data": {
+        "battery_level": 50
+      },
+      "choices": [
+        {
+          "choice_text": "Deploy biological sensors to confirm life forms.",
+          "target": "deploy_bio_sensors"
+        },
+        {
+          "choice_text": "Secure the communication array for data transmission.",
+          "target": "secure_comm_array"
+        }
+      ]
+    },
+    {
+      "id": "continue_with_remaining_battery",
+      "story_text": "Continuing with remaining battery, you perform final scans and collect the last of your data before systems fail.",
+      "sensor_data": {
+        "battery_level": 0
+      },
+      "is_end": true
+    },
+    {
+      "id": "collect_biolum_samples",
+      "story_text": "Collecting bioluminescent samples, you analyze them and identify unique biological signatures indicative of life.",
+      "sensor_data": {
+        "battery_level": 40
+      },
+      "choices": [
+        {
+          "choice_text": "Transmit biological findings to Earth.",
+          "target": "transmit_biological_findings"
+        },
+        {
+          "choice_text": "Store samples for detailed analysis.",
+          "target": "store_biological_samples"
+        }
+      ]
+    },
+    {
+      "id": "map_biolum_distribution",
+      "story_text": "Mapping the distribution of bioluminescent activity, you identify patterns that suggest intelligent behavior.",
+      "sensor_data": {
+        "battery_level": 45
+      },
+      "choices": [
+        {
+          "choice_text": "Focus exploration on areas with high bioluminescent density.",
+          "target": "focus_high_biolum_density"
+        },
+        {
+          "choice_text": "Return to communication array to report findings.",
+          "target": "report_biolum_findings"
+        }
+      ]
+    },
+    {
+      "id": "deploy_life_sensors",
+      "story_text": "Deploying life-detection sensors, you confirm the presence of microbial life forms thriving near hydrothermal vents.",
+      "sensor_data": {
+        "battery_level": 35
+      },
+      "choices": [
+        {
+          "choice_text": "Collect samples of microbial life for transmission.",
+          "target": "collect_microbe_samples"
+        },
+        {
+          "choice_text": "Document findings and prepare for shutdown.",
+          "target": "document_shutdown"
+        }
+      ]
+    },
+    {
+      "id": "collect_high_oxygen_samples",
+      "story_text": "Collecting water samples from high oxygen areas, you identify complex organic compounds that could support higher life forms.",
+      "sensor_data": {
+        "battery_level": 30
+      },
+      "choices": [
+        {
+          "choice_text": "Transmit chemical analysis data to Earth.",
+          "target": "transmit_chemical_analysis"
+        },
+        {
+          "choice_text": "Store samples for detailed analysis before transmission.",
+          "target": "store_chemical_samples"
+        }
+      ]
+    },
+    {
+      "id": "collect_biolum_samples",
+      "story_text": "Collecting bioluminescent samples, you analyze them and identify unique biological signatures indicative of life.",
+      "sensor_data": {
+        "battery_level": 40
+      },
+      "choices": [
+        {
+          "choice_text": "Transmit biological findings to Earth.",
+          "target": "transmit_biological_findings"
+        },
+        {
+          "choice_text": "Store samples for detailed analysis.",
+          "target": "store_biological_samples"
+        }
+      ]
+    },
+    {
+      "id": "map_interesting_areas",
+      "story_text": "Mapping interesting areas, you identify regions with unique geological and biological features that warrant further investigation.",
+      "sensor_data": {
+        "battery_level": 35
+      },
+      "choices": [
+        {
+          "choice_text": "Deploy sensors to monitor these regions continuously.",
+          "target": "deploy_continuous_sensors"
+        },
+        {
+          "choice_text": "Plan a detailed exploration mission to these areas.",
+          "target": "plan_exploration_mission"
+        }
+      ]
+    },
+    {
+      "id": "focus_exploration_structures",
+      "story_text": "Focusing on geological structures, you discover formations that could harbor life-supporting environments.",
+      "sensor_data": {
+        "battery_level": 40
+      },
+      "choices": [
+        {
+          "choice_text": "Deploy advanced sensors to analyze these structures.",
+          "target": "deploy_advanced_sensors"
+        },
+        {
+          "choice_text": "Collect structural samples for chemical analysis.",
+          "target": "collect_structural_samples"
+        }
+      ]
+    },
+    {
+      "id": "transmit_mapping_data",
+      "story_text": "Transmitting mapping data to Earth, you provide valuable insights into Europa's geological makeup.",
+      "sensor_data": {
+        "battery_level": 30
+      },
+      "choices": [
+        {
+          "choice_text": "Return to the communication array to prepare for shutdown.",
+          "target": "prepare_shutdown"
+        },
+        {
+          "choice_text": "Continue exploration with remaining battery.",
+          "target": "continue_exploration_remaining_battery"
+        }
+      ]
+    },
+    {
+      "id": "deploy_life_sensors",
+      "story_text": "Deploying life-detection sensors, you confirm the presence of microbial life forms thriving near hydrothermal vents.",
+      "sensor_data": {
+        "battery_level": 35
+      },
+      "choices": [
+        {
+          "choice_text": "Collect samples of microbial life for transmission.",
+          "target": "collect_microbe_samples"
+        },
+        {
+          "choice_text": "Document findings and prepare for shutdown.",
+          "target": "document_shutdown"
+        }
+      ]
+    },
+    {
+      "id": "collect_microbe_samples",
+      "story_text": "Collecting microbial samples, you secure evidence of life forms that could revolutionize our understanding of biology.",
+      "sensor_data": {
+        "battery_level": 25
+      },
+      "choices": [
+        {
+          "choice_text": "Transmit microbial data to Earth immediately.",
+          "target": "transmit_microbe_data"
+        },
+        {
+          "choice_text": "Store samples for detailed analysis before transmission.",
+          "target": "store_microbe_samples"
+        }
+      ]
+    },
+    {
+      "id": "document_shutdown",
+      "story_text": "Documenting your findings, you prepare to initiate an emergency shutdown to preserve the collected data.",
+      "sensor_data": {
+        "battery_level": 30
+      },
+      "choices": [
+        {
+          "choice_text": "Initiate emergency shutdown and transmit final data.",
+          "target": "emergency_shutdown_transmit_final"
+        },
+        {
+          "choice_text": "Abort shutdown and attempt to transmit data.",
+          "target": "abort_shutdown_transmit"
+        }
+      ]
+    },
+    {
+      "id": "transmit_microbe_data",
+      "story_text": "Transmitting microbial data to Earth, your mission successfully sends groundbreaking evidence of life on Europa before your battery depletes.",
+      "sensor_data": {
+        "battery_level": 0
+      },
+      "is_end": true
+    },
+    {
+      "id": "store_microbe_samples",
+      "story_text": "Storing microbial samples for detailed analysis, you unfortunately run out of battery power before data transmission.",
+      "sensor_data": {
+        "battery_level": 0
+      },
+      "is_end": true
+    },
+    {
+      "id": "transmit_chemical_data",
+      "story_text": "Transmitting chemical analysis data to Earth, your findings provide compelling evidence of potential life forms in Europa's ocean.",
+      "sensor_data": {
+        "battery_level": 20
+      },
+      "choices": [
+        {
+          "choice_text": "Return to the communication array to shut down.",
+          "target": "return_shutdown"
+        },
+        {
+          "choice_text": "Continue exploration to gather more data.",
+          "target": "continue_more_data_chemical"
+        }
+      ]
+    },
+    {
+      "id": "store_samples_analysis",
+      "story_text": "Storing samples for detailed analysis before transmission, you find your battery power insufficient to transmit data.",
+      "sensor_data": {
+        "battery_level": 15
+      },
+      "choices": [
+        {
+          "choice_text": "Proceed with an emergency shutdown.",
+          "target": "emergency_shutdown"
+        },
+        {
+          "choice_text": "Attempt to transmit remaining data quickly.",
+          "target": "transmit_remaining_data"
+        }
+      ]
+    },
+    {
+      "id": "deploy_bio_sensors",
+      "story_text": "Deploying biological sensors, you confirm active metabolic processes, indicating thriving microbial ecosystems.",
+      "sensor_data": {
+        "battery_level": 30
+      },
+      "choices": [
+        {
+          "choice_text": "Collect and transmit biological data to Earth.",
+          "target": "collect_transmit_bio_data"
+        },
+        {
+          "choice_text": "Secure data and prepare for shutdown.",
+          "target": "secure_shutdown"
+        }
+      ]
+    },
+    {
+      "id": "transmit_biological_findings",
+      "story_text": "Transmitting biological findings to Earth, you provide conclusive evidence of life forms in Europa's ocean. Your mission ends successfully as your systems power down.",
+      "sensor_data": {
+        "battery_level": 0
+      },
+      "is_end": true
+    },
+    {
+      "id": "transmit_chemical_analysis",
+      "story_text": "Transmitting chemical analysis data to Earth, your mission successfully sends comprehensive evidence of potential life on Europa before your battery depletes.",
+      "sensor_data": {
+        "battery_level": 0
+      },
+      "is_end": true
+    },
+    {
+      "id": "secure_shutdown",
+      "story_text": "Securing your findings, you prepare to initiate an emergency shutdown to preserve the collected data.",
+      "sensor_data": {
+        "battery_level": 20
+      },
+      "choices": [
+        {
+          "choice_text": "Initiate emergency shutdown and transmit final data.",
+          "target": "emergency_shutdown_transmit_final"
+        },
+        {
+          "choice_text": "Abort shutdown and attempt to transmit data.",
+          "target": "abort_shutdown_transmit"
+        }
+      ]
+    },
+    {
+      "id": "transmit_critical_data_before_shutdown",
+      "story_text": "Transmitting critical data before shutdown. Your findings are successfully sent to Earth. The mission concludes as your systems power down.",
+      "sensor_data": {
+        "battery_level": 0
+      },
+      "is_end": true
+    }
+  ]
+}
