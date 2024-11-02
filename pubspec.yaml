@@ -24,3 +24,11 @@ flutter:
      - assets/
      - assets/game_data/
      - assets/images/
+
+  fonts:
+    - family: Autiowide
+      fonts:
+      - asset: assets/fonts/Audiowide-Regular.ttf
+    - family: KodeMono
+      fonts:
+      - asset: assets/fonts/KodeMono-VariableFont_wght.ttf
