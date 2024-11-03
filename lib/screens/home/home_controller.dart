@@ -1,4 +1,4 @@
-import 'package:contact_abyss/screens/game/home_route.dart';
+import 'package:contact_abyss/screens/game/game_route.dart';
 import 'package:contact_abyss/screens/home/home_route.dart';
 import 'package:contact_abyss/screens/home/home_view.dart';
 import 'package:contact_abyss/services/game_service/game_data_service.dart';

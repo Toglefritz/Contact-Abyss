@@ -1,4 +1,4 @@
-import 'package:contact_abyss/screens/game/home_controller.dart';
+import 'package:contact_abyss/screens/game/game_controller.dart';
 import 'package:contact_abyss/services/game_service/game_data_service.dart';
 import 'package:flutter/material.dart';
 

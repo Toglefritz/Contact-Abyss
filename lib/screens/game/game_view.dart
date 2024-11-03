@@ -1,5 +1,5 @@
-import 'package:contact_abyss/screens/game/home_controller.dart';
-import 'package:contact_abyss/screens/game/home_route.dart';
+import 'package:contact_abyss/screens/game/game_controller.dart';
+import 'package:contact_abyss/screens/game/game_route.dart';
 import 'package:contact_abyss/values/insets.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +15,25 @@ class GameView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: MediaQuery.of(context).size.width * 0.8,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: Insets.medium),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: Insets.xSmall),
+                child: RotatedBox(
+                  quarterTurns: 1,
+                  child: state.batteryIcon,
+                ),
+              ), // Show the battery icon
+              Text(
+                '${state.batteryLevel}%',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ],
+          ),
+        ),
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert),
@@ -22,10 +41,8 @@ class GameView extends StatelessWidget {
               switch (choice) {
                 case 'Reset':
                   state.resetGame(); // Call the resetGame method
-                  break;
                 case 'Return to Main Menu':
                   state.returnToMainMenu(); // Call the returnToMainMenu method
-                  break;
                 default:
                   break;
               }
