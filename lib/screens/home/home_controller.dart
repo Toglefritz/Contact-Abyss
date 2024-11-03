@@ -1,3 +1,4 @@
+import 'package:contact_abyss/screens/game/home_route.dart';
 import 'package:contact_abyss/screens/home/home_route.dart';
 import 'package:contact_abyss/screens/home/home_view.dart';
 import 'package:contact_abyss/services/game_service/game_data_service.dart';
@@ -30,7 +31,14 @@ class HomeController extends State<HomeRoute> {
 
   /// Handles taps on the "New Game" button.
   void onNewGame() {
-    // TODO(Toglefritz): Navigate to the game route
+    // Navigate to the GameRoute.
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => GameRoute(
+          gameDataService: gameDataService,
+        ),
+      ),
+    );
   }
 
   @override

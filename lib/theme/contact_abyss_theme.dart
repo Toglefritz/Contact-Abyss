@@ -15,6 +15,14 @@ ThemeData contactAbyssTheme = ThemeData(
       fontFamily: 'Autiowide',
     ),
   ),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Colors.transparent,
+    centerTitle: true,
+    elevation: 0,
+    titleTextStyle: TextStyle(
+      fontFamily: 'Autiowide',
+    ),
+  ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: ButtonStyle(
       padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
