@@ -27,6 +27,8 @@ class HomeController extends State<HomeRoute> {
   Future<void> _initializeGameData() async {
     // Load the game data from the JSON file.
     await gameDataService.loadGameFromAsset('assets/game_data/game_data.json');
+
+    setState(() {});
   }
 
   /// Handles taps on the "New Game" button.

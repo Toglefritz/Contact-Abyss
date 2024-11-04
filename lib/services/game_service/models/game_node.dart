@@ -1,6 +1,8 @@
 import 'package:contact_abyss/services/game_service/models/choice.dart';
 import 'package:contact_abyss/services/game_service/models/sensor_data.dart';
 
+import 'game_outcome.dart';
+
 /// A class representing a single node in the "Europa Explorer: Hunt for Life" game.
 ///
 /// Each `GameNode` contains the narrative text, sensor data, available choices,
@@ -36,6 +38,10 @@ class GameNode {
   /// If `true`, the game concludes upon reaching this node.
   final bool isEnd;
 
+  /// Determines if the game outcome is a win, loss, or neutral. A [GameOutcome] will only be available for ending
+  /// nodes.
+  final GameOutcome? outcome;
+
   /// Creates a new instance of [GameNode].
   ///
   /// - [id]: A unique identifier for the node.
@@ -51,6 +57,7 @@ class GameNode {
     this.sensorData,
     this.batteryChange,
     this.isEnd = false,
+    this.outcome,
   });
 
   /// Creates a [GameNode] instance from a JSON map.
@@ -65,16 +72,15 @@ class GameNode {
     return GameNode(
       id: json['id'] as String,
       storyText: json['story_text'] as String,
-      sensorData: json['sensor_data'] != null
-          ? SensorData.fromJson(json['sensor_data'] as Map<String, dynamic>)
-          : null,
+      sensorData: json['sensor_data'] != null ? SensorData.fromJson(json['sensor_data'] as Map<String, dynamic>) : null,
       choices: (json['choices'] as List<dynamic>? ?? [])
           .map((choice) => Choice.fromJson(choice as Map<String, dynamic>))
           .toList(),
-      batteryChange: json['battery_change'] != null
-          ? json['battery_change'] as int
-          : null,
+      batteryChange: json['battery_change'] != null ? json['battery_change'] as int : null,
       isEnd: json['is_end'] as bool? ?? false,
+      outcome: json['outcome'] != null
+          ? GameOutcome.values.firstWhere((outcome) => outcome.id == json['outcome'] as String)
+          : null,
     );
   }
 

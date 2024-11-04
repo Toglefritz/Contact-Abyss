@@ -24,6 +24,7 @@ flutter:
      - assets/
      - assets/game_data/
      - assets/images/
+     - assets/outcome_images/
 
   fonts:
     - family: Autiowide

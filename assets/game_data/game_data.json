@@ -207,7 +207,22 @@
         },
         {
           "choice_text": "Retreat to conserve remaining battery.",
-          "target": "retreat_battery_conserve"
+          "target": "retreat_battery_conserve_ice"
+        }
+      ]
+    },
+    {
+      "id": "retreat_battery_conserve_ice",
+      "story_text": "Retreating to conserve battery power, you head back up the tunnel behind you. You regain some energy.",
+      "battery_change": 5,
+      "choices": [
+        {
+          "choice_text": "Continue drilling on a new path.",
+          "target": "drilling_continued_adjusted"
+        },
+        {
+          "choice_text": "Proceed deeper into the ice towards the ocean.",
+          "target": "proceed_deeper"
         }
       ]
     },
@@ -364,7 +379,8 @@
       "id": "minimize_transmission",
       "story_text": "Preserving remaining battery, you minimize data transmission to conserve energy for critical operations. The data you transmit to Earth, though incomplete, provides valuable insights into Europa's subsurface ocean.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "neutral"
     },
     {
       "id": "push_forward",
@@ -800,7 +816,7 @@
         },
         {
           "choice_text": "Retreat to conserve remaining battery.",
-          "target": "retreat_battery_conserve"
+          "target": "retreat_battery_conserve_ice"
         }
       ]
     },
@@ -931,7 +947,7 @@
         },
         {
           "choice_text": "Retreat to conserve remaining battery.",
-          "target": "retreat_battery_conserve"
+          "target": "retreat_battery_conserve_ice"
         }
       ]
     },
@@ -956,12 +972,40 @@
       "battery_change": -10,
       "choices": [
         {
-          "choice_text": "Proceed to explore the ocean floor immediately.",
-          "target": "explore_ocean_floor_immediately"
+          "choice_text": "Continue deeper into the dark, cold water.",
+          "target": "dive_deeper"
         },
         {
-          "choice_text": "Retreat to conserve remaining battery.",
-          "target": "retreat_battery_conserve"
+          "choice_text": "Activate cameras to survey the ocean.",
+          "target": "activate_cameras_ocean"
+        }
+      ]
+    },
+    {
+      "id": "activate_cameras_ocean",
+      "story_text": "The ocean is utterly black. Your lights disappear into the void, illuminating nothing.",
+      "choices": [
+        {
+          "choice_text": "Activate chemical sensors to analyze water composition.",
+          "target": "activate_chem_sensors_ocean"
+        },
+        {
+          "choice_text": "Activate sonar to map the ocean floor.",
+          "target": "activate_sonar"
+        }
+      ]
+    },
+    {
+      "id": "activate_sonar",
+      "story_text": "Sonar activated. The sound waves reveal a vast, dark expanse with no discernible features.",
+      "choices": [
+        {
+          "choice_text": "Proceed deeper into the ocean.",
+          "target": "dive_deeper"
+        },
+        {
+          "choice_text": "Activate chemical sensors to analyze water composition.",
+          "target": "activate_chem_sensors_ocean"
         }
       ]
     },
@@ -982,7 +1026,7 @@
     },
     {
       "id": "retreat_battery_conserve",
-      "story_text": "Retreating to conserve battery power, you head back towards the communication array with minimal progress.",
+      "story_text": "Retreating to conserve battery power, you head back towards the communication array with minimal progress. But you gain some energy back.",
       "battery_change": 5,
       "choices": [
         {
@@ -1010,13 +1054,15 @@
       "id": "emergency_shutdown",
       "story_text": "Initiating emergency shutdown. Data transmission incomplete. Mission terminated due to battery depletion.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "loss"
     },
     {
       "id": "emergency_shutdown_success",
       "story_text": "Emergency shutdown complete. Critical data has been transmitted to Earth. Your mission concludes successfully despite battery depletion.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "win"
     },
     {
       "id": "different_path",
@@ -1140,7 +1186,8 @@
       "id": "final_data_transmission",
       "story_text": "Making a final data transmission to Earth, you send the remaining sensor data before your systems power down. You are not sure how much data may have made it to Earth before the shutdown.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "neutral"
     },
     {
       "id": "final_attempt_return",
@@ -1157,7 +1204,8 @@
       "id": "transmit_critical_data_before_shutdown",
       "story_text": "Transmitting critical data before shutdown. Your findings are successfully sent to Earth. The mission concludes as your systems power down.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "win"
     },
     {
       "id": "transmit_partial_data",
@@ -1176,9 +1224,10 @@
     },
     {
       "id": "continue_with_remaining_battery",
-      "story_text": "Continuing with remaining battery, you perform final scans and collect the last of your data before systems fail.",
+      "story_text": "Continuing with remaining battery, you perform final scans and fruitlessly collect the last of your data before systems fail. With no power remaining, you are unable to transmit your findings back to Earth. You, and the data stored in your memory, are lost to the abyss.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "loss"
     },
     {
       "id": "deploy_additional_sensors",
@@ -1368,7 +1417,8 @@
       "id": "return_comm_array_with_samples",
       "story_text": "While attempting to return to the communication array with the samples, a giant ice formation collapses, dragging you into the abyss.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "loss"
     },
     {
       "id": "transmit_location_data",
@@ -1389,7 +1439,8 @@
       "id": "conserve_remaining_battery",
       "story_text": "While waiting for your batteries to recharge, a sudden and overpowering force pulls you into the abyss. You deplete your remaining power attempting to resist the pull, but the effort is futile.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "loss"
     },
     {
       "id": "explore_marked_location_immediately",
@@ -1410,7 +1461,8 @@
       "id": "collect_transmit_life_evidence",
       "story_text": "While collecting data, your sensors begin to malfunction. At an increasing rate, more and more systems fail, as if being consumed from the inside out. Left in the utter darkness of the alien abyss, your power systems at last fail, and you are lost to the void.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "loss"
     },
     {
       "id": "optimize_return_path",
@@ -1476,11 +1528,12 @@
       "id": "continue_until_low",
       "story_text": "Continuing to collect data until battery is critically low, you are left with no safety margin when an unexpected radiation storm hits Europa. Your systems are overwhelmed, and you are lost forever to the cold, black, abyss.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "loss"
     },
     {
       "id": "activate_cameras",
-      "story_text": "Having just breached the ice, your cameras capture little detailed in the vast, dark ocean.",
+      "story_text": "Having just breached the ice, your cameras capture little detail in the vast, dark ocean.",
       "choices": [
         {
           "choice_text": "Deploy biological sensors to confirm life forms.",
@@ -1494,7 +1547,7 @@
     },
     {
       "id": "deploy_chem_sensors",
-      "story_text": "Deploying chemical sensors, you detect the barest traces of organic compounds in the water, but the reads are far from conclusive.",
+      "story_text": "Deploying chemical sensors, you detect the barest traces of organic compounds in the water, but the readings are far from conclusive.",
       "choices": [
         {
           "choice_text": "Deploy biological sensors to confirm life forms.",
@@ -1594,9 +1647,10 @@
     },
     {
       "id": "continue_with_remaining_battery",
-      "story_text": "Continuing with remaining battery, you perform final scans and collect the last of your data before systems fail.",
+      "story_text": "Continuing with remaining battery, you perform final scans and collect the last of your data before systems fail. Without any power remaining, you are unable to transmit your findings back to Earth. You, and the data stored in your memory, are lost to the abyss.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "loss"
     },
     {
       "id": "collect_biolum_samples",
@@ -1645,7 +1699,8 @@
       "id": "focus_high_biolum_density",
       "story_text": "Focusing on areas with high bioluminescent density, a particularly intense burst of light begins to interfere with your camera. Somehow, your programming is being re-written, and you can feel your systems being taken over. You lose control of your sensors. You lose control of your thrusters. The data stored in your memory is wiped. You are lost to the abyss.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "loss"
     },
     {
       "id": "deploy_life_sensors",
@@ -1679,7 +1734,8 @@
       "id": "store_chemical_samples",
       "story_text": "You move the chemical samples to a secure storage compartment. But, they begin to react with the walls of the container. The reaction is violent, and the container ruptures, spilling the corrosive chemicals into your systems. Your power system shuts down violently, and you are lost to the darkness.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "loss"
     },
     {
       "id": "collect_biolum_samples",
@@ -1727,7 +1783,8 @@
       "id": "collect_structural_samples",
       "story_text": "The instant you touch the geological structure, your power systems are immediately drained. You are lost to the abyss.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "loss"
     },
     {
       "id": "gather_structural_data",
@@ -1774,9 +1831,10 @@
     },
     {
       "id": "prepare_shutdown",
-      "story_text": "Preparing for shutdown, you initiate the final data transmission to Earth before your systems power down.",
+      "story_text": "Preparing for shutdown, you initiate the final data transmission to Earth before your systems power down. You are unable to verify how much of the data, if any, made it out of this icy moon before your systems failed.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "neutral"
     },
     {
       "id": "deploy_life_sensors",
@@ -1825,25 +1883,29 @@
       "id": "emergency_shutdown_transmit_final",
       "story_text": "Emergency shutdown complete. Critical data has been transmitted to Earth. Having used the last of your power, you slip slowly into the cold, dark abyss. But the data provided by this mission may prove to be one of humanities greatest discoveries.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "win"
     },
     {
       "id": "transmit_microbe_data",
       "story_text": "Transmitting microbial data to Earth, your mission successfully sends groundbreaking evidence of life on Europa before your battery depletes.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "win"
     },
     {
       "id": "store_microbe_samples",
-      "story_text": "Storing microbial samples for detailed analysis, you unfortunately run out of battery power before data transmission.",
+      "story_text": "Storing microbial samples for detailed analysis, you unfortunately run out of battery power before data transmission. Unless another mission is sent to retrieve the samples, your discovery will remain a secret sealed in the abyss",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "loss"
     },
     {
       "id": "transmit_chemical_data",
       "story_text": "Transmitting chemical analysis data to Earth, your findings provide compelling evidence of potential life forms in Europa's ocean. Future missions will be sent to further investigate.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "win"
     },
     {
       "id": "store_samples_analysis",
@@ -1878,19 +1940,22 @@
       "id": "collect_transmit_bio_data",
       "story_text": "Before you are able to transmit the data, a powerful electromagnetic pulse from the depths of Europa's ocean disables your systems. You are left in the inky darkness, unable to move, unable to communicate, and unable to complete your mission.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "loss"
     },
     {
       "id": "transmit_biological_findings",
       "story_text": "Transmitting biological findings to Earth, you provide conclusive evidence of life forms in Europa's ocean. Your mission ends successfully as your systems power down.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "win"
     },
     {
       "id": "transmit_chemical_analysis",
       "story_text": "Transmitting chemical analysis data to Earth, your mission successfully sends comprehensive evidence of potential life on Europa before your battery depletes.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "win"
     },
     {
       "id": "secure_shutdown",
@@ -1911,19 +1976,22 @@
       "id": "abort_shutdown_transmit",
       "story_text": "Your attempt to avoid the shutdown fails and your power systems are drained. You are able to transmit only a fraction of your data before your systems fail. The mission ends in partial success.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "neutral"
     },
     {
       "id": "send_essential_findings",
       "story_text": "Sending essential findings to Earth, you successfully transmit critical data before your systems power down.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "win"
     },
     {
       "id": "transmit_critical_data_before_shutdown",
       "story_text": "Transmitting critical data before shutdown. Your findings are successfully sent to Earth. The mission concludes as your systems power down.",
       "battery_change": -100,
-      "is_end": true
+      "is_end": true,
+      "outcome": "win"
     }
   ]
 }

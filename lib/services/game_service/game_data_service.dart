@@ -74,6 +74,13 @@ class GameDataService {
         }
       }
 
+      // Third pass: Validate that all ending nodes have an outcome.
+      for (final GameNode node in _nodes.values) {
+        if (node.isEnd && node.outcome == null) {
+          throw FormatException("Ending node '${node.id}' does not have an outcome.");
+        }
+      }
+
       // Set the current node to the start node. Initialize the history with the start node ID.
       _currentNode = _nodes['start'];
       _history

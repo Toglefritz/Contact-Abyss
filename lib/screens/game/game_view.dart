@@ -24,7 +24,10 @@ class GameView extends StatelessWidget {
                 padding: const EdgeInsets.only(right: Insets.xSmall),
                 child: RotatedBox(
                   quarterTurns: 1,
-                  child: state.batteryIcon,
+                  child: Icon(
+                    state.batteryIcon,
+                    size: 36,
+                  ),
                 ),
               ), // Show the battery icon
               Text(
@@ -78,9 +81,10 @@ class GameView extends StatelessWidget {
             height: double.infinity,
           ),
 
+          // The content of the game node.
           SafeArea(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Text
                 Padding(
@@ -112,6 +116,38 @@ class GameView extends StatelessWidget {
                     ),
                   );
                 }),
+
+                // If the game has ended, show the outcome.
+                if (state.gameNode.isEnd)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Insets.medium,
+                      vertical: Insets.large,
+                    ),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          // Show an image based on the outcome.
+                          Image.asset(
+                            state.getOutcomeImage(),
+                            width: MediaQuery.of(context).size.width * 0.6,
+                          ),
+
+                          // Display the outcome text.
+                          Padding(
+                            padding: const EdgeInsets.only(top: Insets.medium),
+                            child: Text(
+                              state.getOutcomeText(),
+                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
