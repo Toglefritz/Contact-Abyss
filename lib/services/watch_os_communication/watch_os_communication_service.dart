@@ -190,7 +190,8 @@ class WatchOSCommunicationService {
   /// Method Channel call will fail, and a `PlatformException` will be thrown.
   Future<Map<String, dynamic>?> sendMessageWithReply(Map<String, dynamic> message) async {
     try {
-      final Map<String, dynamic>? reply = await _channel.invokeMethod('sendMessageWithReply', message);
+      final Map<String, dynamic>? reply = await _channel.invokeMapMethod<String, dynamic>('sendMessageWithReply', message);
+
       return reply;
     } on PlatformException catch (e) {
       debugPrint('Sending message to watch with reply failed with error, ${e.message}');

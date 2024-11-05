@@ -100,7 +100,6 @@ class WatchConnectivityHandler: NSObject, WCSessionDelegate {
                 completion(.failure(WatchConnectivityError.messageSendingFailed(error.localizedDescription)))
             }
         } else {
-            // If the watch is not reachable, return a failure response.
             print("Watch is not reachable. Message not sent.")
             completion(.failure(WatchConnectivityError.watchNotReachable))
         }
