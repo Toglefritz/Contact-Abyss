@@ -7,7 +7,7 @@ class Choice {
   /// The text of the choice presented to the player.
   final String choiceText;
 
-  /// The unique identifier of the target [GameNode] this choice leads to.
+  /// The unique identifier of the target `GameNode` this choice leads to.
   final String target;
 
   /// Creates a new instance of [Choice].

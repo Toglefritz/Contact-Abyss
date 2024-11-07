@@ -1,6 +1,5 @@
+import 'package:contact_abyss/values/insets.dart';
 import 'package:flutter/material.dart';
-
-import '../values/insets.dart';
 
 /// A [ThemeData] class that defines the visual properties of the Contact Abyss theme.
 ThemeData contactAbyssTheme = ThemeData(
