@@ -1,7 +1,6 @@
 import 'package:contact_abyss/services/game_service/models/choice.dart';
+import 'package:contact_abyss/services/game_service/models/game_outcome.dart';
 import 'package:contact_abyss/services/game_service/models/sensor_data.dart';
-
-import 'game_outcome.dart';
 
 /// A class representing a single node in the "Europa Explorer: Hunt for Life" game.
 ///

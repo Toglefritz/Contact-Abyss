@@ -1,8 +1,7 @@
 import 'package:contact_abyss/screens/home/home_controller.dart';
 import 'package:contact_abyss/screens/home/home_route.dart';
+import 'package:contact_abyss/values/insets.dart';
 import 'package:flutter/material.dart';
-
-import '../../values/insets.dart';
 
 /// A view for the [HomeRoute].
 class HomeView extends StatelessWidget {
