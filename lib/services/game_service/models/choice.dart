@@ -1,4 +1,3 @@
-
 /// A class representing a choice available to the player at a specific game node.
 ///
 /// Each `Choice` includes the text displayed to the player and the target node's

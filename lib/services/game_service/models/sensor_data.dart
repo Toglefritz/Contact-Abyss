@@ -1,4 +1,3 @@
-
 /// A class representing sensor data associated with a game node.
 ///
 /// [SensorData] includes various environmental readings and status indicators

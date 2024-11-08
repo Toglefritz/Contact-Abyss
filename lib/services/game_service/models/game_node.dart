@@ -2,12 +2,11 @@ import 'package:contact_abyss/services/game_service/models/choice.dart';
 import 'package:contact_abyss/services/game_service/models/game_outcome.dart';
 import 'package:contact_abyss/services/game_service/models/sensor_data.dart';
 
-/// A class representing a single node in the "Europa Explorer: Hunt for Life" game.
+/// A class representing a single node in the "Contact Abyss" game.
 ///
-/// Each `GameNode` contains the narrative text, sensor data, available choices,
-/// battery power changes, and information about whether the node signifies the end
-/// of the game. This structure allows for the creation of an n-ary tree that
-/// models the game's decision-making process.
+/// Each `GameNode` contains the narrative text, sensor data, available choices, battery power changes, and
+/// information about whether the node signifies the end of the game. This structure allows for the creation of an
+/// n-ary tree that models the game's decision-making process.
 class GameNode {
   /// A unique identifier for the node.
   final String id;
