@@ -5,7 +5,6 @@ import Foundation
 /// to WatchOS communication. It delegates message sending and receiving to
 /// `WatchConnectivityHandler`.
 class WatchOSMethodChannelHandler {
-    
     // MARK: - Properties
     
     /// The Flutter `MethodChannel` used for WatchOS communication.
