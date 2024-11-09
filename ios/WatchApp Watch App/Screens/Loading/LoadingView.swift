@@ -21,7 +21,7 @@ struct LoadingView: View {
                 ProgressView("Loading...")
                     .progressViewStyle(CircularProgressViewStyle(tint: .white))
                     .foregroundColor(.white)
-                    .font(.headline)
+                    .fontWeight(.bold)  
             }
         }
         .onAppear {

@@ -12,6 +12,7 @@ struct WatchApp_Watch_AppApp: App {
     var body: some Scene {
         WindowGroup {
             LoadingView(viewModel: LoadingViewModel())
+                .environment(\.font, .custom("Kode Mono", size: 16))
         }
     }
 }
