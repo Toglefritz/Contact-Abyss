@@ -4,7 +4,9 @@ import Foundation
 ///
 /// Each `Choice` includes the text displayed to the player and the target node's
 /// unique identifier that the game will navigate to upon selection.
-class Choice {
+class Choice: Identifiable {
+    var id: String { target } // Use `target` as the unique identifier
+    
     /// The text of the choice presented to the player.
     let choiceText: String
     

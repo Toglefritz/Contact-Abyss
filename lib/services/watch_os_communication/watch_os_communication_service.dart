@@ -149,7 +149,7 @@ class WatchOSCommunicationService {
   static final WatchOSCommunicationService _instance = WatchOSCommunicationService._privateConstructor();
 
   /// The [MethodChannel] used to communicate with the native iOS code.
-  static const MethodChannel _channel = MethodChannel('watchOS_communication');
+  static const MethodChannel channel = MethodChannel('watchOS_communication');
 
   /// A [StreamController] for messages received from the WatchOS app.
   final StreamController<Map<String, dynamic>> _messageController = StreamController<Map<String, dynamic>>.broadcast();
@@ -165,7 +165,7 @@ class WatchOSCommunicationService {
 
   /// Initializes the Method Call Handler to listen for incoming messages from iOS.
   void initialize() {
-    _channel.setMethodCallHandler(_handleMethodCall);
+    channel.setMethodCallHandler(_handleMethodCall);
   }
 
   /// Sends a message to the WatchOS app without expecting a reply.
@@ -175,7 +175,7 @@ class WatchOSCommunicationService {
   /// `PlatformException` will be thrown.
   Future<void> sendMessageToWatch(Map<String, dynamic> message) async {
     try {
-      await _channel.invokeMethod('sendMessage', message);
+      await channel.invokeMethod('sendMessage', message);
     } on PlatformException catch (e) {
       debugPrint('Sending message to watch failed with error, ${e.message}');
 
@@ -190,7 +190,7 @@ class WatchOSCommunicationService {
   /// Method Channel call will fail, and a `PlatformException` will be thrown.
   Future<Map<String, dynamic>?> sendMessageWithReply(Map<String, dynamic> message) async {
     try {
-      final Map<String, dynamic>? reply = await _channel.invokeMapMethod<String, dynamic>('sendMessageWithReply', message);
+      final Map<String, dynamic>? reply = await channel.invokeMapMethod<String, dynamic>('sendMessageWithReply', message);
 
       return reply;
     } on PlatformException catch (e) {
@@ -207,7 +207,7 @@ class WatchOSCommunicationService {
   /// is best used for non-urgent data that does not require immediate confirmation, receipt, or action.
   Future<void> transferUserInfo(Map<String, dynamic> userInfo) async {
     try {
-      await _channel.invokeMethod('transferUserInfo', userInfo);
+      await channel.invokeMethod('transferUserInfo', userInfo);
     } on PlatformException catch (e) {
       debugPrint('Transferring user data to watched failed with exception, ${e.message}');
     }
@@ -221,7 +221,7 @@ class WatchOSCommunicationService {
   /// activated.
   Future<void> transferFile(String filePath, {Map<String, dynamic>? metadata}) async {
     try {
-      await _channel.invokeMethod('transferFile', {
+      await channel.invokeMethod('transferFile', {
         'filePath': filePath,
         'metadata': metadata,
       });
@@ -238,7 +238,7 @@ class WatchOSCommunicationService {
   /// the WatchOS app becomes active, it will receive the updated application context.
   Future<void> updateApplicationContext(Map<String, dynamic> context) async {
     try {
-      await _channel.invokeMethod('updateApplicationContext', context);
+      await channel.invokeMethod('updateApplicationContext', context);
     } on PlatformException catch (e) {
       debugPrint('Updating watch application context failed with exception, ${e.message}');
     }
