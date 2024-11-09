@@ -42,21 +42,69 @@ class CommunicationService: NSObject, WCSessionDelegate {
     
     // MARK: - Public Methods
     
-    /// Sends a message to the iOS app and handles the reply.
+    /// Sends a message to the iOS app with a retry mechanism.
     ///
     /// - Parameters:
     ///   - message: A dictionary containing the data to send.
-    ///   - completion: A closure to handle the result.
-    func sendMessage(_ message: [String: Any], completion: @escaping (Result<[String: Any], Error>) -> Void) {
+    ///   - maxRetries: The maximum number of retry attempts. Defaults to 3.
+    ///   - retryDelay: The delay between retry attempts in seconds. Defaults to 1.0 seconds.
+    ///   - completion: A closure to handle the result, containing either the response or an error.
+    func sendMessage(_ message: [String: Any],
+                     maxRetries: Int = 3,
+                     retryDelay: TimeInterval = 1.0,
+                     completion: @escaping (Result<[String: Any], Error>) -> Void) {
+        // Start the send attempt with the maximum number of retries.
+        attemptSend(message, retriesRemaining: maxRetries, delay: retryDelay, completion: completion)
+    }
+    
+    // MARK: - Private Helper Methods
+    
+    /// Attempts to send a message to the iOS app, retrying upon failure.
+    ///
+    /// - Parameters:
+    ///   - message: The message dictionary to send.
+    ///   - retriesRemaining: The number of remaining retry attempts.
+    ///   - delay: The delay before the next retry attempt.
+    ///   - completion: The completion handler to call with the result.
+    private func attemptSend(_ message: [String: Any],
+                             retriesRemaining: Int,
+                             delay: TimeInterval,
+                             completion: @escaping (Result<[String: Any], Error>) -> Void) {
+        
+        // Check if the iOS app is reachable.
         guard session.isReachable else {
-            completion(.failure(CommunicationError.notReachable))
+            if retriesRemaining > 0 {
+                print("iOS app not reachable. Retrying in \(delay) seconds. Attempts left: \(retriesRemaining)")
+                // Schedule the next retry attempt after the specified delay.
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                    self?.attemptSend(message, retriesRemaining: retriesRemaining - 1, delay: delay, completion: completion)
+                }
+            } else {
+                // All retry attempts exhausted. Return failure.
+                print("iOS app not reachable. No more retry attempts.")
+                completion(.failure(CommunicationError.notReachable))
+            }
+            
             return
         }
         
+        // Attempt to send the message.
         session.sendMessage(message, replyHandler: { response in
+            // Message sent successfully. Return the response.
+            print("Message sent successfully: \(response)")
             completion(.success(response))
         }, errorHandler: { error in
-            completion(.failure(error))
+            if retriesRemaining > 0 {
+                print("Failed to send message: \(error.localizedDescription). Retrying in \(delay) seconds. Attempts left: \(retriesRemaining)")
+                // Schedule the next retry attempt after the specified delay.
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                    self?.attemptSend(message, retriesRemaining: retriesRemaining - 1, delay: delay, completion: completion)
+                }
+            } else {
+                // All retry attempts exhausted. Return failure.
+                print("Failed to send message: \(error.localizedDescription). No more retry attempts.")
+                completion(.failure(error))
+            }
         })
     }
     
