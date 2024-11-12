@@ -59,26 +59,26 @@ class WatchConnectivityHandler: NSObject, WCSessionDelegate {
     
     // MARK: - Message Sending
     
-    /// Sends a message to the connected WatchOS app using the Watch Connectivity framework.
-    /// The message is a dictionary containing key-value pairs that represent the data
-    /// to be sent.
+    /// Sends a message to the WatchOS app without expecting a reply.
     ///
     /// - Parameters:
-    ///   - message: A dictionary containing the message data to send.
-    ///   - completion: A closure that takes a `Result<Void, Error>` indicating success or failure.
+    ///   - message: A dictionary containing the data to send.
+    ///   - completion: A closure to handle the result.
     func sendMessageToWatch(_ message: [String: Any], completion: @escaping (Result<Void, Error>) -> Void) {
-        // Check if the Watch is reachable before attempting to send a message.
-        if WCSession.default.isReachable {
-            WCSession.default.sendMessage(message, replyHandler: nil) { error in
-                // Handle any errors that occur during message sending.
-                print("Failed to send message to Watch: \(error.localizedDescription)")
-                completion(.failure(WatchConnectivityError.messageSendingFailed(error.localizedDescription)))
-            }
-        } else {
-            // If the watch is not reachable, return a failure response.
-            print("Watch is not reachable. Message not sent.")
+        guard WCSession.default.isReachable else {
+            print("iOS app is not reachable. Cannot send message to WatchOS app.")
             completion(.failure(WatchConnectivityError.watchNotReachable))
+            return
         }
+        
+        WCSession.default.sendMessage(message, replyHandler: { response in
+            // Handle any response from WatchOS app if needed
+            print("Received reply from WatchOS app: \(response)")
+            completion(.success(()))
+        }, errorHandler: { error in
+            print("Error sending message to WatchOS app: \(error.localizedDescription)")
+            completion(.failure(error))
+        })
     }
     
     /// Sends a message to the connected WatchOS app and handles the reply.
@@ -150,17 +150,82 @@ class WatchConnectivityHandler: NSObject, WCSessionDelegate {
     ///   - replyHandler: A closure to send a reply back to the WatchOS app.
     func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
         print("Received message with reply handler from Watch: \(message)")
-        // Process the message and prepare a reply.
-        // For demonstration, echoing back the received message.
-        let response = ["response": "Message received: \(message)"]
-        replyHandler(response)
         
-        // Optionally, forward the message to Flutter without a reply.
+        // The maximum length of time to wait for for Dart/Flutter side to respond.
+        let flutterResponseTimeout: TimeInterval = 5.0 // 5 seconds
+        
+        // Forward the message to Flutter via MethodChannel and await response
         guard let channel = channel else {
             print("Flutter MethodChannel is not set. Unable to forward message.")
+            // Respond with an error to WatchOS app
+            let errorResponse: [String: Any] = [
+                "error": "MethodChannel not initialized"
+            ]
+            replyHandler(errorResponse)
+            
             return
         }
-        channel.invokeMethod("receivedMessageFromWatch", arguments: message)
+        
+        // Define a flag to ensure replyHandler is called only once
+        var isReplied = false
+        
+        // Set up a timeout mechanism using DispatchWorkItem
+        let timeoutWorkItem = DispatchWorkItem {
+            if !isReplied {
+                isReplied = true
+                print("Flutter did not respond in time. Sending timeout error to WatchOS app.")
+                let timeoutResponse: [String: Any] = [
+                    "error": "Flutter response timed out"
+                ]
+                replyHandler(timeoutResponse)
+            }
+        }
+        
+        // Schedule the timeout work item
+        DispatchQueue.main.asyncAfter(deadline: .now() + flutterResponseTimeout, execute: timeoutWorkItem)
+        
+        // Forward the message to Flutter on the main thread
+        DispatchQueue.main.async { [weak self] in
+            guard self != nil else { return }
+            
+            channel.invokeMethod("receivedMessageFromWatch", arguments: message) { result in
+                // Cancel the timeout if Flutter responds in time
+                timeoutWorkItem.cancel()
+                
+                // Ensure that replyHandler is not called multiple times
+                guard !isReplied else {
+                    print("Timeout already occurred. Ignoring Flutter's response.")
+                    return
+                }
+                isReplied = true
+                
+                if let response = result as? [String: Any] {
+                    // Check if the response contains an "error" key
+                    if let firstKey = response.keys.first, firstKey == "error" {
+                        print("Error received from Dart/Flutter side: \(response[firstKey] ?? "Unknown error")")
+                        let error = NSError(domain: "CommunicationService", code: 1, userInfo: [
+                            NSLocalizedDescriptionKey: response[firstKey] as? String ?? "An unknown error occurred."
+                        ])
+                        // Handle the error by passing it back to the WatchOS app
+                        let errorResponse: [String: Any] = [
+                            "error": response[firstKey] as? String ?? "Unknown error"
+                        ]
+                        replyHandler(errorResponse)
+                    } else {
+                        // Successfully received a valid response from Flutter
+                        print("Received response from Flutter: \(response)")
+                        replyHandler(response)
+                    }
+                } else {
+                    // Handle the case where result is `nil` or an unexpected type
+                    print("Invalid or nil response from Flutter.")
+                    let errorResponse: [String: Any] = [
+                        "error": "Invalid response from Flutter"
+                    ]
+                    replyHandler(errorResponse)
+                }
+            }
+        }
     }
     
     /// Called when the reachability of the paired device changes.

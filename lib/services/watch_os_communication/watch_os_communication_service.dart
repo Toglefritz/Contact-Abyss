@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:contact_abyss/services/game_service/game_data_service.dart';
+import 'package:contact_abyss/services/game_service/models/game_node.dart';
+import 'package:contact_abyss/services/watch_os_communication/watch_os_communication_service_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -151,14 +154,8 @@ class WatchOSCommunicationService {
   /// The [MethodChannel] used to communicate with the native iOS code.
   static const MethodChannel channel = MethodChannel('watchOS_communication');
 
-  /// A [StreamController] for messages received from the WatchOS app.
-  final StreamController<Map<String, dynamic>> _messageController = StreamController<Map<String, dynamic>>.broadcast();
-
   /// A [StreamController] for reachability changes of the WatchOS app.
   final StreamController<bool> _reachabilityController = StreamController<bool>.broadcast();
-
-  /// Stream of messages received from the WatchOS app.
-  Stream<Map<String, dynamic>> get receivedMessageStream => _messageController.stream;
 
   /// Stream of reachability changes of the WatchOS app.
   Stream<bool> get watchReachabilityStream => _reachabilityController.stream;
@@ -190,7 +187,8 @@ class WatchOSCommunicationService {
   /// Method Channel call will fail, and a `PlatformException` will be thrown.
   Future<Map<String, dynamic>?> sendMessageWithReply(Map<String, dynamic> message) async {
     try {
-      final Map<String, dynamic>? reply = await channel.invokeMapMethod<String, dynamic>('sendMessageWithReply', message);
+      final Map<String, dynamic>? reply =
+          await channel.invokeMapMethod<String, dynamic>('sendMessageWithReply', message);
 
       return reply;
     } on PlatformException catch (e) {
@@ -244,51 +242,99 @@ class WatchOSCommunicationService {
     }
   }
 
-  /// Handles incoming method calls from the native iOS side.
+  /// Handles incoming Method Channel calls from the iOS side, processes the requests, and returns appropriate responses.
   ///
-  /// The Swift side can send two different Method Channel calls to the Dart side resulting from activity by the
-  /// WatchOS companion app: `receivedMessageFromWatch` and `watchReachabilityChanged`. This method processes these
-  /// calls and notifies the appropriate StreamControllers to broadcast the received messages or reachability changes.
-  /// Using StreamControllers allows other parts of the Flutter app to listen for these events and respond accordingly.
+  /// This function is invoked when the iOS side forwards a request from the WatchOS app to the Dart side
+  /// via a Method Channel. It is responsible for processing the call, extracting arguments, and executing
+  /// the requested action. After processing, the function generates and returns a response back to the iOS
+  /// side, which is then forwarded to the WatchOS app.
   ///
-  /// As with all Stream-based operations, listeners must be sure to dispose of their subscriptions to prevent memory
-  /// leaks when they are no longer needed.
-  Future<void> _handleMethodCall(MethodCall call) async {
-    // Make sure that the arguments are not null and are of the correct type.
-    if (call.arguments == null || call.arguments is! Map) {
-      debugPrint('Received method call with null arguments');
+  /// ### Workflow
+  /// 1. **Receive Call**: The method receives a `MethodCall` object containing the `method` name and `arguments`.
+  /// 2. **Validate Arguments**:
+  ///    - Ensures that the arguments are not null and are of type `Map`.
+  ///    - If validation fails, an error response is returned to the iOS side.
+  /// 3. **Process Message**:
+  ///    - Depending on the `method` name, the function determines the appropriate action to take.
+  ///    - Example actions include processing messages from the WatchOS app or handling reachability notifications.
+  /// 4. **Return Response**:
+  ///    - After processing, the function generates a `Map<String, dynamic>` response or error message.
+  ///    - This response is returned to the iOS side, which forwards it back to the WatchOS app.
+  ///
+  /// ### Parameters
+  /// - `call`: The [MethodCall] object containing the method name and arguments sent from the iOS side.
+  ///
+  /// ### Returns
+  /// - A [Future] that resolves to a `Map<String, dynamic>?`:
+  ///   - A valid response for the requested action.
+  ///   - An error message if the request is invalid or cannot be processed.
+  ///
+  /// ### Workflow for a "receivedMessageFromWatch" Call
+  /// - **Description**: This method call indicates that the WatchOS app has sent a message to the Flutter app.
+  /// - **Arguments**:
+  ///   - The `arguments` should be a map containing details of the message, such as its action and payload.
+  /// - **Processing**:
+  ///   - The message is passed to a helper function `_processMessageAndGetResponse` to generate a response.
+  ///   - The response is returned to the iOS side for forwarding to the WatchOS app.
+  ///
+  /// ### Workflow for a "watchReachabilityChanged" Call
+  /// - **Description**: This method call notifies the Flutter app about reachability changes for the WatchOS app.
+  /// - **Arguments**:
+  ///   - The `arguments` should include an `isReachable` key indicating the new reachability status.
+  /// - **Processing**:
+  ///   - The reachability status is broadcast to listeners using the `_reachabilityController`.
+  ///   - No response is required for this action, so the function returns `null`.
+  ///
+  /// ### Error Handling
+  /// - If the arguments are invalid or null, an error response is returned.
+  /// - If an unhandled exception occurs during processing, a detailed error message is returned to the iOS side.
+  Future<Map<String, dynamic>?> _handleMethodCall(MethodCall call) async {
+    debugPrint('Received method call: ${call.method}');
 
-      return;
-    }
+    try {
+      // Make sure that the arguments are not null and are of the correct type.
+      if (call.arguments == null || call.arguments is! Map) {
+        debugPrint('Received method call with null arguments');
 
-    // Cast the arguments to a Map.
-    final Map<String, dynamic> arguments = call.arguments as Map<String, dynamic>;
+        // Return an error response to iOS.
+        return {
+          'error': 'Invalid arguments received',
+        };
+      }
 
-    switch (call.method) {
-      // The WatchOS app has sent a message to the Flutter app.
-      case 'receivedMessageFromWatch':
-        final Map<String, dynamic> message = Map<String, dynamic>.from(call.arguments as Map<dynamic, dynamic>);
-        _messageController.add(message);
+      // Process updates to reachability status. This is universal for all Flutter apps that interact with WatchOS.
+      // Therefore, it is handled directly in the core service.
+      if (call.method == 'watchReachabilityChanged') {
+        // Safely cast arguments to Map<String, dynamic>
+        final Map<String, dynamic> message = Map<String, dynamic>.from(call.arguments as Map<Object?, Object?>);
 
-      // The WatchOS app has sent a reachability change notification.
-      case 'watchReachabilityChanged':
-        if (arguments.containsKey('isReachable') && arguments['isReachable'] is bool) {
-          final bool isReachable = arguments['isReachable'] as bool;
+        debugPrint('Watch reachability changed: $message');
+
+        if (message.containsKey('isReachable') && message['isReachable'] is bool) {
+          final bool isReachable = message['isReachable'] as bool;
           _reachabilityController.add(isReachable);
         } else {
-          debugPrint('watchReachabilityChanged called with invalid arguments: $arguments');
+          debugPrint('watchReachabilityChanged called with invalid arguments: $message');
         }
 
-      // The method call is not recognized.
-      default:
-        debugPrint('Unhandled method call: ${call.method}');
-        break;
+        return null;
+      }
+      // Process application-specific logic for handling messages from the WatchOS app.
+      else {
+        return handleMethodCall(call);
+      }
+    } catch (e) {
+      debugPrint('Error handling method call: $e');
+
+      // Return an error response to iOS.
+      return {
+        'error': 'Error handling method call: $e',
+      };
     }
   }
 
   /// Disposes the StreamControllers to prevent memory leaks.
   void dispose() {
-    _messageController.close();
     _reachabilityController.close();
   }
 }

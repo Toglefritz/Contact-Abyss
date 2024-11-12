@@ -89,6 +89,7 @@ class WatchOSMethodChannelHandler {
             return
         }
         
+        // Send the message to the WatchOS app
         connectivityHandler.sendMessageToWatch(args, replyHandler: { reply in
             // On success, return the reply to Flutter
             result(reply)
