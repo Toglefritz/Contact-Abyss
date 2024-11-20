@@ -2,19 +2,19 @@ import Foundation
 import Combine
 
 /// The `HomeViewModel` class manages the logic for the `HomeView`, including starting a new game.
-/// It interacts with the `CommunicationService` to send messages to the iOS app and handles the response.
+/// It interacts with the `AppSpecificCommunicationManager` to send messages to the iOS app and handles the response.
 ///
 /// ## Features
 /// - Provides a method (`startNewGame`) to initiate a new game by communicating with the iOS app.
 /// - Publishes an `errorMessage` property to notify the view of errors encountered during communication.
 ///
 /// ## Behavior
-/// - When `startNewGame` is called, the view model sends a request to the iOS app via `CommunicationService`.
+/// - When `startNewGame` is called, the view model sends a request to the iOS app via `AppSpecificCommunicationManager`.
 /// - On a successful response, it posts a notification with the new game node, which other parts of the app can observe.
 /// - If the operation fails, it updates the `errorMessage` property for the view to display feedback.
 ///
 /// ## Dependencies
-/// - Depends on the `CommunicationService` singleton for Watch-to-iOS communication.
+/// - Depends on the `AppSpecificCommunicationManager` singleton for Watch-to-iOS communication.
 class HomeViewModel: ObservableObject {
     // MARK: - Published Properties
     
@@ -23,16 +23,16 @@ class HomeViewModel: ObservableObject {
     
     // MARK: - Dependencies
     
-    /// The communication service used to interact with the iOS app.
-    private var communicationService: CommunicationService
+    /// The app-specific communication manager used to interact with the iOS app.
+    private var appCommunicationManager: AppSpecificCommunicationManager
     
     // MARK: - Initializer
     
-    /// Initializes the `HomeViewModel` with an optional `CommunicationService` dependency.
+    /// Initializes the `HomeViewModel` with an optional `AppSpecificCommunicationManager` dependency.
     ///
-    /// - Parameter communicationService: The communication service instance. Defaults to the singleton instance.
-    init(communicationService: CommunicationService = CommunicationService.shared) {
-        self.communicationService = communicationService
+    /// - Parameter appCommunicationManager: The communication manager instance. Defaults to the singleton instance.
+    init(appCommunicationManager: AppSpecificCommunicationManager = AppSpecificCommunicationManager.shared) {
+        self.appCommunicationManager = appCommunicationManager
     }
     
     // MARK: - Methods
@@ -44,7 +44,7 @@ class HomeViewModel: ObservableObject {
     /// - On failure:
     ///   - Updates the `errorMessage` property with the error description.
     func startNewGame() {
-        communicationService.startNewGame { [weak self] result in
+        appCommunicationManager.startNewGame { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let gameNode):

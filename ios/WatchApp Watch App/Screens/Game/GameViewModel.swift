@@ -14,7 +14,7 @@ import Combine
 /// - If the game ends or an invalid node is received, the `errorMessage` property is updated.
 ///
 /// ## Dependencies
-/// - Depends on the `CommunicationService` singleton for Watch-to-iOS communication.
+/// - Depends on the `AppSpecificCommunicationManager` singleton for app-specific Watch-to-iOS communication.
 class GameViewModel: ObservableObject {
     // MARK: - Published Properties
 
@@ -26,19 +26,19 @@ class GameViewModel: ObservableObject {
 
     // MARK: - Dependencies
 
-    /// The communication service used to interact with the iOS app.
-    private var communicationService: CommunicationService
+    /// The app-specific communication manager used to interact with the iOS app.
+    private var appCommunicationManager: AppSpecificCommunicationManager
 
     // MARK: - Initializer
 
-    /// Initializes the `GameViewModel` with the given `GameNode` and optional `CommunicationService`.
+    /// Initializes the `GameViewModel` with the given `GameNode` and optional `AppSpecificCommunicationManager`.
     ///
     /// - Parameters:
     ///   - gameNode: The initial game node to display in the `GameView`.
-    ///   - communicationService: The communication service instance. Defaults to the singleton instance.
-    init(gameNode: GameNode, communicationService: CommunicationService = CommunicationService.shared) {
+    ///   - appCommunicationManager: The app-specific communication manager instance. Defaults to the singleton instance.
+    init(gameNode: GameNode, appCommunicationManager: AppSpecificCommunicationManager = AppSpecificCommunicationManager.shared) {
         self.gameNode = gameNode
-        self.communicationService = communicationService
+        self.appCommunicationManager = appCommunicationManager
     }
 
     // MARK: - Methods
@@ -51,7 +51,7 @@ class GameViewModel: ObservableObject {
     ///   - If the iOS app responds with a valid game node, updates `gameNode`.
     ///   - If the response is invalid or the game ends, updates `errorMessage`.
     func selectChoice(_ choice: Choice) {
-        communicationService.makeChoice(choice) { [weak self] result in
+        appCommunicationManager.makeChoice(choice) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let newGameNode):

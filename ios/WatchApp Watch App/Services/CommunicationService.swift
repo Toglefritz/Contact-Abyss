@@ -10,7 +10,6 @@ import Combine
 /// to be generic and applicable to any WatchOS/iOS companion app setup, making it a reusable and extendable communication
 /// service. Any app-specific functionality is built on top of this core class, usually in an extension or subclass.
 class CommunicationService: NSObject, WCSessionDelegate {
-    
     /// The singleton instance of `CommunicationService`, ensuring a single communication manager throughout the app.
     ///
     /// The singleton pattern is used to make sure that there is only one communication point, preventing multiple
@@ -33,6 +32,12 @@ class CommunicationService: NSObject, WCSessionDelegate {
     /// app to react accordingly when the communication availability changes, such as updating UI or changing the flow
     /// based on whether the companion iOS app can be reached.
     let reachabilityPublisher = PassthroughSubject<Bool, Never>()
+    
+    /// Publishes all received messages.
+    ///
+    /// This publisher is a `PassthroughSubject` that emits every message received from the iOS app. This allows
+    /// subscribers (like AppSpecificCommunicationManager) to react to incoming messages.
+    let receivedMessagePublisher = PassthroughSubject<[String: Any], Never>()
     
     // MARK: - Initializer
     
