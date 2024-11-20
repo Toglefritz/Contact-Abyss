@@ -186,7 +186,7 @@ class WatchConnectivityHandler: NSObject, WCSessionDelegate {
         
         // Forward the message to Flutter on the main thread
         DispatchQueue.main.async { [weak self] in
-            guard self != nil else { return }
+            guard let self = self else { return }
             
             channel.invokeMethod("receivedMessageFromWatch", arguments: message) { result in
                 // Cancel the timeout if Flutter responds in time
@@ -203,9 +203,7 @@ class WatchConnectivityHandler: NSObject, WCSessionDelegate {
                     // Check if the response contains an "error" key
                     if let firstKey = response.keys.first, firstKey == "error" {
                         print("Error received from Dart/Flutter side: \(response[firstKey] ?? "Unknown error")")
-                        let error = NSError(domain: "CommunicationService", code: 1, userInfo: [
-                            NSLocalizedDescriptionKey: response[firstKey] as? String ?? "An unknown error occurred."
-                        ])
+                        
                         // Handle the error by passing it back to the WatchOS app
                         let errorResponse: [String: Any] = [
                             "error": response[firstKey] as? String ?? "Unknown error"
@@ -214,7 +212,18 @@ class WatchConnectivityHandler: NSObject, WCSessionDelegate {
                     } else {
                         // Successfully received a valid response from Flutter
                         print("Received response from Flutter: \(response)")
-                        replyHandler(response)
+                        
+                        // Sanitize the response by removing keys with NSNull values.
+                        // This is done because the WatchOS side does not handle NSNull values gracefully. Instead,
+                        // the WatchOS app will need to infer that the value is null by its absence.
+                        var sanitizedResponse = response
+                        for (key, value) in response {
+                            if value is NSNull {
+                                sanitizedResponse.removeValue(forKey: key)
+                            }
+                        }
+                        
+                        replyHandler(sanitizedResponse)
                     }
                 } else {
                     // Handle the case where result is `nil` or an unexpected type
