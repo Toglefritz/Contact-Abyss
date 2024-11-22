@@ -17,29 +17,46 @@ struct LoadingView: View {
     // MARK: - Body
     
     var body: some View {
-        ZStack {
-            // Background image
-            Image("BackgroundImage")
-                .resizable()
-                .scaledToFill()
-                .edgesIgnoringSafeArea(.all)
-            
-            // Black overlay with 50% opacity
-            Color.black
-                .opacity(0.5)
-                .edgesIgnoringSafeArea(.all)
-            
-            // Loading indicator and text
-            VStack {
-                ProgressView("Loading...")
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white)) // White circular indicator
-                    .foregroundColor(.white) // Ensure text and indicator color contrast against the background
-                    .fontWeight(.bold) // Emphasize the "Loading..." text
+        NavigationStack {
+            ZStack {
+                // Background image
+                Image("BackgroundImage")
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
+                
+                // Black overlay with 50% opacity
+                Color.black
+                    .opacity(0.5)
+                    .edgesIgnoringSafeArea(.all)
+                
+                // Loading indicator and text
+                VStack {
+                    ProgressView("Loading...")
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white)) // White circular indicator
+                        .foregroundColor(.white) // Ensure text and indicator color contrast against the background
+                        .fontWeight(.bold) // Emphasize the "Loading..." text
+                }
             }
-        }
-        .onAppear {
-            // Initiate fetching the current game node when the view appears.
-            viewModel.fetchCurrentGameNode()
+            .onAppear {
+                // Initiate fetching the current game node when the view appears.
+                viewModel.fetchCurrentGameNode()
+            }
+            // Navigation Destination for HomeView
+            .navigationDestination(isPresented: $viewModel.navigateToHome) {
+                HomeView(viewModel: HomeViewModel())
+            }
+            // Handle Errors (Optional)
+            .alert(isPresented: Binding<Bool>(
+                get: { viewModel.errorMessage != nil },
+                set: { _ in viewModel.errorMessage = nil }
+            )) {
+                Alert(
+                    title: Text("Error"),
+                    message: Text(viewModel.errorMessage ?? "An unknown error occurred."),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
     }
 }

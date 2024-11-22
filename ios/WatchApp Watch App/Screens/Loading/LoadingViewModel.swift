@@ -20,6 +20,9 @@ class LoadingViewModel: ObservableObject {
     /// An optional error message, displayed if a request fails.
     @Published var errorMessage: String?
     
+    /// A flag to trigger navigation to HomeView when there is no active game.
+    @Published var navigateToHome: Bool = false
+    
     // MARK: - Initialization
     
     /// Initializes the `LoadingViewModel` with an instance of `AppSpecificCommunicationManager`.
@@ -70,6 +73,7 @@ class LoadingViewModel: ObservableObject {
                     } else {
                         // If no active game exists, set flags for starting a new game.
                         self?.currentGameNode = nil
+                        self?.navigateToHome = true // Trigger navigation
                     }
                 case .failure(let error):
                     // Update `errorMessage` if the request fails.
