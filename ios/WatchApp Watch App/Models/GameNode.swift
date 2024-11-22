@@ -4,7 +4,7 @@ import Foundation
 ///
 /// Each `GameNode` contains the narrative text, sensor data, available choices, battery power changes,
 /// and information about whether the node signifies the end of the game.
-class GameNode {
+class GameNode: Equatable {
     /// A unique identifier for the node.
     let id: String
     
@@ -111,5 +111,16 @@ class GameNode {
         }
         
         return json
+    }
+    
+    /// Compares two `GameNode` instances for equality.
+    static func == (lhs: GameNode, rhs: GameNode) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.storyText == rhs.storyText &&
+        lhs.sensorData == rhs.sensorData &&
+        lhs.choices == rhs.choices &&
+        lhs.batteryChange == rhs.batteryChange &&
+        lhs.isEnd == rhs.isEnd &&
+        lhs.outcome == rhs.outcome
     }
 }

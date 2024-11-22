@@ -4,7 +4,7 @@ import Foundation
 ///
 /// Each `Choice` includes the text displayed to the player and the target node's
 /// unique identifier that the game will navigate to upon selection.
-class Choice: Identifiable {
+class Choice: Identifiable, Equatable {
     var id: String { target } // Use `target` as the unique identifier
     
     /// The text of the choice presented to the player.
@@ -51,5 +51,15 @@ class Choice: Identifiable {
             "choice_text": choiceText,
             "target": target
         ]
+    }
+    
+    /// Compares two `Choice` instances for equality.
+    ///
+    /// - Parameters:
+    ///   - lhs: The left-hand side `Choice` instance.
+    ///   - rhs: The right-hand side `Choice` instance.
+    /// - Returns: `true` if the instances are equal, `false` otherwise.
+    static func == (lhs: Choice, rhs: Choice) -> Bool {
+        return lhs.choiceText == rhs.choiceText && lhs.target == rhs.target
     }
 }

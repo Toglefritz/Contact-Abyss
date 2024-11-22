@@ -4,7 +4,7 @@ import Foundation
 ///
 /// `SensorData` includes various environmental readings and status indicators
 /// that influence the player's decisions and the game's progression.
-class SensorData {
+class SensorData: Equatable {
     /// The current radiation level detected, represented as a string descriptor.
     ///
     /// Examples include "Low", "Moderate", "High", etc.
@@ -54,5 +54,25 @@ class SensorData {
         }
         
         return json
+    }
+    
+    /// Compares two `SensorData` instances for equality.
+    static func == (lhs: SensorData, rhs: SensorData) -> Bool {
+        // Compare `radiationLevel` directly
+        guard lhs.radiationLevel == rhs.radiationLevel else { return false }
+        
+        // Compare `additionalData` dictionaries manually
+        guard lhs.additionalData?.count == rhs.additionalData?.count else { return false }
+        for (key, lhsValue) in lhs.additionalData ?? [:] {
+            // Ensure the key exists in `rhs.additionalData`
+            guard let rhsValue = rhs.additionalData?[key] else { return false }
+            
+            // Convert both values to `String` for comparison (if possible)
+            if String(describing: lhsValue) != String(describing: rhsValue) {
+                return false
+            }
+        }
+        
+        return true
     }
 }

@@ -20,8 +20,10 @@ class LoadingViewModel: ObservableObject {
     /// An optional error message, displayed if a request fails.
     @Published var errorMessage: String?
     
-    /// A flag to trigger navigation to HomeView when there is no active game.
-    @Published var navigateToHome: Bool = false
+    /// A flag to determine the next navigation destination.
+    ///
+    /// - `navigationDestination`: When set to a specific `AppDestination` case, it triggers navigation within the `RootView`.
+    @Published var navigationDestination: AppDestination? = nil
     
     // MARK: - Initialization
     
@@ -39,19 +41,22 @@ class LoadingViewModel: ObservableObject {
     private func setupBindings() {
         // Subscribe to game node updates
         appCommunicationManager.gameNodePublisher
-            .receive(on: DispatchQueue.main)
+            .receive(on: DispatchQueue.main) // Ensure updates are received on the main thread
             .sink { [weak self] gameNode in
-                // Update properties based on the received game node.
+                // Update the currentGameNode when a new game node is received
                 self?.currentGameNode = gameNode
             }
             .store(in: &cancellables)
         
         // Subscribe to no active game events
         appCommunicationManager.noActiveGamePublisher
-            .receive(on: DispatchQueue.main)
+            .receive(on: DispatchQueue.main) // Ensure updates are received on the main thread
             .sink { [weak self] in
-                // Set properties for a new game when no active game notification is received.
+                // Set currentGameNode to nil to indicate no active game
                 self?.currentGameNode = nil
+                
+                // Trigger navigation to HomeView since there's no active game
+                self?.navigationDestination = .home
             }
             .store(in: &cancellables)
     }
@@ -67,16 +72,18 @@ class LoadingViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let gameNode):
-                    // If a game node exists, update properties accordingly.
+                    // If a game node exists, update currentGameNode accordingly
                     if let node = gameNode {
                         self?.currentGameNode = node
+                        // Navigate to GameView with the fetched GameNode
+                        self?.navigationDestination = .game(node)
                     } else {
-                        // If no active game exists, set flags for starting a new game.
+                        // If no active game exists, set navigationDestination to .home to trigger navigation
                         self?.currentGameNode = nil
-                        self?.navigateToHome = true // Trigger navigation
+                        self?.navigationDestination = .home
                     }
                 case .failure(let error):
-                    // Update `errorMessage` if the request fails.
+                    // Update errorMessage to display the error in the UI
                     self?.errorMessage = error.localizedDescription
                 }
             }
