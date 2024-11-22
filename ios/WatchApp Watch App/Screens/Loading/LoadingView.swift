@@ -27,7 +27,7 @@ struct LoadingView: View {
                 
                 // Black overlay with 50% opacity
                 Color.black
-                    .opacity(0.5)
+                    .opacity(0.6)
                     .edgesIgnoringSafeArea(.all)
                 
                 // Loading indicator and text
@@ -45,6 +45,7 @@ struct LoadingView: View {
             // Navigation Destination for HomeView
             .navigationDestination(isPresented: $viewModel.navigateToHome) {
                 HomeView(viewModel: HomeViewModel())
+                
             }
             // Handle Errors (Optional)
             .alert(isPresented: Binding<Bool>(

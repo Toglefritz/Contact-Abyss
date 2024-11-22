@@ -25,15 +25,26 @@ struct HomeView: View {
             Image("BackgroundImage")
                 .resizable()
                 .scaledToFill()
-                .edgesIgnoringSafeArea(.all)
+                .ignoresSafeArea() // Updated for SwiftUI's latest API
+            
+            // Black overlay with 50% opacity
+            Color.black
+                .opacity(0.6)
+                .ignoresSafeArea()
             
             // Main content
-            VStack {
+            VStack(spacing: 20) { // Added spacing for better layout
                 // Title text
-                Text("Start a New Game")
-                    .font(.title)
+                Text("Contact\nAbyss")
+                    .font(Font.custom("Kode Mono", size: 28)) // Custom font
+                    .fontWeight(.bold)
                     .foregroundColor(.white)
-                    .padding()
+                    .multilineTextAlignment(.center) // Center alignment
+                    .lineLimit(nil) // Allow unlimited lines
+                    .padding(.horizontal, 10) // Horizontal padding to prevent overflow
+                    // Glowing shadow layers
+                    .shadow(color: Color.white.opacity(0.8), radius: 1, x: 0, y: 0)
+                    .shadow(color: Color.white.opacity(0.6), radius: 4, x: 0, y: 0)
                 
                 // "New Game" button
                 Button(action: {
@@ -41,14 +52,20 @@ struct HomeView: View {
                     viewModel.startNewGame()
                 }) {
                     Text("New Game")
-                        .font(.headline)
-                        .padding()
-                        .frame(maxWidth: .infinity) // Button stretches horizontally
-                        .background(Color.blue) // Blue background
+                    
+                        .font(Font.custom("Kode Mono", size: 18)) // Custom font
                         .foregroundColor(.white) // White text for contrast
-                        .cornerRadius(8) // Rounded corners for a polished look
+                        .padding(.horizontal, 16) // Padding inside the button
+                        .padding(.vertical, 8)
                 }
-                .padding(.horizontal) // Add horizontal padding for layout alignment
+                .buttonStyle(PlainButtonStyle()) // Remove default button styling
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.white, lineWidth: 1.5)
+                )
+                .background(Color.clear)
+                .cornerRadius(12)
+                .padding(.horizontal, 10)
             }
         }
     }
