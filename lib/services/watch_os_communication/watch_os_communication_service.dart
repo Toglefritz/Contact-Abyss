@@ -310,6 +310,8 @@ class WatchOSCommunicationService {
 
         if (message.containsKey('isReachable') && message['isReachable'] is bool) {
           final bool isReachable = message['isReachable'] as bool;
+
+          // Broadcast the reachability status to listeners.
           _reachabilityController.add(isReachable);
         } else {
           debugPrint('watchReachabilityChanged called with invalid arguments: $message');

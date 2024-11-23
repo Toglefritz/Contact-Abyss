@@ -58,6 +58,6 @@ struct RootView: View {
             }
         }
         // Animates changes to `navigationDestination` with a smooth ease-in-out effect
-        .animation(.easeInOut(duration: 0.5), value: loadingViewModel.navigationDestination)
+        .animation(.easeInOut(duration: 0.5), value: currentDestination)
     }
 }

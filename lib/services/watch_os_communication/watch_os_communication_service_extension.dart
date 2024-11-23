@@ -50,7 +50,7 @@ extension WatchOSCommunicationServiceExtension on WatchOSCommunicationService {
     final Map<String, dynamic> message = Map<String, dynamic>.from(call.arguments as Map<Object?, Object?>);
 
     switch (call.method) {
-    // The WatchOS app has sent a message to the Flutter app.
+      // The WatchOS app has sent a message to the Flutter app.
       case 'receivedMessageFromWatch':
         debugPrint('Received message from WatchOS: $message');
 
@@ -60,7 +60,7 @@ extension WatchOSCommunicationServiceExtension on WatchOSCommunicationService {
         // Return a response to the iOS side.
         return response;
 
-    // The method call is not recognized.
+      // The method call is not recognized.
       default:
         debugPrint('Unhandled method call: ${call.method}');
 
@@ -126,5 +126,31 @@ extension WatchOSCommunicationServiceExtension on WatchOSCommunicationService {
       'success': false,
       'message': "Unhandled action: ${message['action']}",
     };
+  }
+
+  /// Sends a [GameNode] to the WatchOS app to keep both apps in sync.
+  ///
+  /// This method serializes the [GameNode] to a JSON-compatible map and sends it to the WatchOS app via the iOS app
+  /// using a Method Channel call.
+  Future<void> sendGameNode(GameNode gameNode) async {
+    final Map<String, dynamic> message = {
+      'action': 'updateGameNode',
+      'gameNode': gameNode.toJson(),
+    };
+
+    try {
+      // Invoke the method on the MethodChannel to send the message to the iOS app
+      final Map<String, dynamic>? result = await sendMessageWithReply(message);
+
+      debugPrint('Successfully sent GameNode to WatchOS: ${gameNode.id}');
+
+      if (result != null && result['success'] == true) {
+        debugPrint('WatchOS app acknowledged the GameNode.');
+      }
+    } on PlatformException catch (e) {
+      debugPrint('Failed to send GameNode to WatchOS: ${e.message}');
+
+      rethrow;
+    }
   }
 }

@@ -18,6 +18,11 @@ import Combine
 class HomeViewModel: ObservableObject {
     // MARK: - Published Properties
     
+    /// A flag to determine the next navigation destination.
+    ///
+    /// - `navigationDestination`: When set to a specific `AppDestination` case, it triggers navigation within the `RootView`.
+    @Published var navigationDestination: AppDestination? = nil
+    
     /// An optional error message, updated when a communication failure occurs.
     @Published var errorMessage: String?
     
@@ -26,10 +31,8 @@ class HomeViewModel: ObservableObject {
     /// The app-specific communication manager used to interact with the iOS app.
     private var appCommunicationManager: AppSpecificCommunicationManager
     
-    /// A flag to determine the next navigation destination.
-    ///
-    /// - `navigationDestination`: When set to a specific `AppDestination` case, it triggers navigation within the `RootView`.
-    @Published var navigationDestination: AppDestination? = nil
+    /// A set of cancellable subscriptions used for Combine publishers to avoid memory leaks.
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initializer
     
@@ -38,9 +41,36 @@ class HomeViewModel: ObservableObject {
     /// - Parameter appCommunicationManager: The communication manager instance. Defaults to the singleton instance.
     init(appCommunicationManager: AppSpecificCommunicationManager = AppSpecificCommunicationManager.shared) {
         self.appCommunicationManager = appCommunicationManager
+        setupIncomingMessageListener()
     }
     
     // MARK: - Methods
+    
+    /// Sets up a listener for incoming messages from the Flutter app.
+    ///
+    /// This method subscribes to the `receivedMessagePublisher` of the `CommunicationService`.
+    /// When a message containing a `GameNode` is received, it updates the `navigationDestination`
+    /// to trigger navigation to the `GameView`.
+    ///
+    /// This listener is used if a new game is started from the Flutter app. When this happens the Flutter app will
+    /// send a `GameNode` instance to the WatchOS app.
+    private func setupIncomingMessageListener() {
+        CommunicationService.shared.receivedMessagePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
+                // Debug: Print the received message
+                print("HomeViewModel received message: \(message)")
+                
+                // Check if the message contains a GameNode
+                if let gameNodeDict = message["gameNode"] as? [String: Any],
+                   let gameNode = GameNode(json: gameNodeDict) {
+                    print("Received GameNode from Flutter app: \(gameNode.id)")
+                    self?.navigationDestination = .game(gameNode)
+                }
+                // Handle other message types if necessary
+            }
+            .store(in: &cancellables)
+    }
     
     /// Sends a request to the iOS app to start a new game.
     ///

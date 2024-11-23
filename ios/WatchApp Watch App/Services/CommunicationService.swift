@@ -164,4 +164,73 @@ class CommunicationService: NSObject, WCSessionDelegate {
     func sessionReachabilityDidChange(_ session: WCSession) {
         reachabilityPublisher.send(session.isReachable)
     }
+    
+    /// Receives a message from the iOS app and publishes it to subscribers.
+    ///
+    /// This delegate method is called when the WatchOS app receives a message from the iOS app via `WCSession.sendMessage`.
+    /// It publishes the received message to the `receivedMessagePublisher`, allowing any observers  to handle the message accordingly.
+    ///
+    /// - Parameters:
+    ///   - session: The `WCSession` instance that received the message.
+    ///   - message: The message dictionary sent from the iOS app.
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        print("CommunicationService received message from iOS app: \(message)")
+        // Publish the received message so that subscribers can react to it.
+        receivedMessagePublisher.send(message)
+    }
+    
+    /// Receives a message from the iOS app with a reply handler and publishes it to subscribers.
+    ///
+    /// This delegate method is called when the WatchOS app receives a message from the iOS app via `WCSession.sendMessage(_:replyHandler:)`.
+    /// It publishes the received message to the `receivedMessagePublisher`, allowing any observers to handle the message accordingly. Additionally, it can
+    /// handle replying back to the iOS app if necessary.
+    ///
+    /// - Parameters:
+    ///   - session: The `WCSession` instance that received the message.
+    ///   - message: The message dictionary sent from the iOS app.
+    ///   - replyHandler: A closure to send a reply back to the iOS app.
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+        print("CommunicationService received message with reply from iOS app: \(message)")
+        // Publish the received message so that subscribers can react to it.
+        receivedMessagePublisher.send(message)
+        
+        // Prepare and send a reply back to the iOS app.
+        // For example, acknowledge receipt:
+        let response: [String: Any] = ["status": "Message received"]
+        replyHandler(response)
+    }
+    
+    /// Checks if the iOS app is currently reachable.
+    ///
+    /// - Returns: A Boolean indicating whether the iOS app is reachable.
+    func isIOSAppReachable() -> Bool {
+        return session.isReachable
+    }
+    
+    /// Updates the application context with the provided data.
+    ///
+    /// - Parameter context: A dictionary containing the data to update the application context.
+    func updateApplicationContext(_ context: [String: Any]) {
+        do {
+            try session.updateApplicationContext(context)
+        } catch {
+            print("Failed to update application context: \(error.localizedDescription)")
+        }
+    }
+    
+    /// Transfers user info to the iOS app.
+    ///
+    /// - Parameter userInfo: A dictionary containing the user info to transfer.
+    func transferUserInfo(_ userInfo: [String: Any]) {
+        session.transferUserInfo(userInfo)
+    }
+    
+    /// Transfers a file to the iOS app.
+    ///
+    /// - Parameters:
+    ///   - fileURL: The local URL of the file to transfer.
+    ///   - metadata: Optional metadata associated with the file.
+    func transferFile(_ fileURL: URL, metadata: [String: Any]? = nil) {
+        session.transferFile(fileURL, metadata: metadata)
+    }
 }

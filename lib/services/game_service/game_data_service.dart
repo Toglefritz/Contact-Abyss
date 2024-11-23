@@ -1,6 +1,9 @@
 import 'dart:convert';
+
 import 'package:contact_abyss/services/game_service/models/choice.dart';
 import 'package:contact_abyss/services/game_service/models/game_node.dart';
+import 'package:contact_abyss/services/watch_os_communication/watch_os_communication_service.dart';
+import 'package:contact_abyss/services/watch_os_communication/watch_os_communication_service_extension.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -58,6 +61,9 @@ class GameDataService with ChangeNotifier {
 
   /// Determines if the game data has been loaded by checking if the list of nodes is not empty.
   bool get isGameLoaded => _nodes.isNotEmpty;
+
+  /// A [WatchOSCommunicationService] instance used to communicate with the WatchOS app.
+  final WatchOSCommunicationService _communicationService = WatchOSCommunicationService();
 
   /// Loads the game data from a JSON asset file and constructs the n-ary tree. The game data is cached in the [_nodes]
   /// list so it can be accessed synchronously.
@@ -142,8 +148,12 @@ class GameDataService with ChangeNotifier {
     // Reset battery level to 100%.
     _batteryLevel = 100;
 
-    currentNode..value = _nodes['start']
-    ..notifyListeners();
+    currentNode
+      ..value = _nodes['start']
+      ..notifyListeners();
+
+    // Send the new game node to the WatchOS app.
+    _onGameNodeChanged();
   }
 
   /// Stops the current game.
@@ -151,8 +161,12 @@ class GameDataService with ChangeNotifier {
   /// This method stops the game by setting the current node to null, clearing the player's history, and setting the
   /// battery level to 100%.
   void stopGame() {
-    currentNode..value = null
-    ..notifyListeners();
+    currentNode
+      ..value = null
+      ..notifyListeners();
+
+    // Send a null value as the game node to the WatchOS app to indicate that the game has ended.
+    _onGameNodeChanged();
 
     _history.clear();
     _batteryLevel = 100;
@@ -195,8 +209,12 @@ class GameDataService with ChangeNotifier {
     }
 
     // Update the current node and history.
-    currentNode..value = targetNode
-    ..notifyListeners();
+    currentNode
+      ..value = targetNode
+      ..notifyListeners();
+
+    // Send the new game node to the WatchOS app.
+    _onGameNodeChanged();
 
     _history.add(targetNode.id);
 
@@ -229,5 +247,25 @@ class GameDataService with ChangeNotifier {
   /// mission. If the battery level reaches 0, the mission is considered a failure, and this method returns `false`.
   bool canContinue() {
     return _batteryLevel > 0;
+  }
+
+  /// When the game node changes, send the new game node to the WatchOS app.
+  ///
+  /// This method is called when the current game node changes. It sends the new game node to the WatchOS app so it can
+  /// update the game state on the watch. This enables the WatchOS app and the Flutter app to stay in sync during the
+  /// game.
+  void _onGameNodeChanged() {
+    final GameNode? gameNode = currentNode.value;
+
+    if (gameNode != null) {
+      try {
+        debugPrint('Sending game node to WatchOS app: ${gameNode.id}');
+        _communicationService.sendGameNode(gameNode);
+      } catch (e) {
+        debugPrint('Failed to send game node to WatchOS app: $e');
+
+        // TODO(Toglefritz): Handle the error
+      }
+    }
   }
 }
