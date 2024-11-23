@@ -68,25 +68,25 @@ class LoadingViewModel: ObservableObject {
     /// - Communicates with the `AppSpecificCommunicationManager` to send a request to the iOS app.
     /// - Updates `currentGameNode` and `isNewGame` based on the response.
     func fetchCurrentGameNode() {
-        appCommunicationManager.requestCurrentGameNode { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let gameNode):
-                    // If a game node exists, update currentGameNode accordingly
-                    if let node = gameNode {
-                        self?.currentGameNode = node
-                        // Navigate to GameView with the fetched GameNode
-                        self?.navigationDestination = .game(node)
-                    } else {
-                        // If no active game exists, set navigationDestination to .home to trigger navigation
-                        self?.currentGameNode = nil
-                        self?.navigationDestination = .home
+            appCommunicationManager.requestCurrentGameNode { [weak self] result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let gameNode):
+                        // If a game node exists, update currentGameNode accordingly
+                        if let node = gameNode {
+                            self?.currentGameNode = node
+                            // Navigate to GameView with the fetched GameNode
+                            self?.navigationDestination = .game(node)
+                        } else {
+                            // If no active game exists, set navigationDestination to .home to trigger navigation
+                            self?.currentGameNode = nil
+                            self?.navigationDestination = .home
+                        }
+                    case .failure(let error):
+                        // Update errorMessage to display the error in the UI
+                        self?.errorMessage = error.localizedDescription
                     }
-                case .failure(let error):
-                    // Update errorMessage to display the error in the UI
-                    self?.errorMessage = error.localizedDescription
                 }
             }
         }
-    }
 }

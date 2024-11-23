@@ -1,5 +1,4 @@
 import 'package:contact_abyss/screens/game/game_controller.dart';
-import 'package:contact_abyss/services/game_service/game_data_service.dart';
 import 'package:flutter/material.dart';
 
 /// The [GameRoute[ is the interface through which the player interacts with the game. It displays the game's current
@@ -12,15 +11,7 @@ import 'package:flutter/material.dart';
 /// node includes a sound effect, it is played when the node is displayed.
 class GameRoute extends StatefulWidget {
   /// Creates a new instance of [GameRoute].
-  const GameRoute({
-    required this.gameDataService,
-    super.key,
-  });
-
-  /// A [GameDataService] instance that provides access to the game data. In this controller, the service is used to
-  /// get information about the current game state and update the game state based on player decisions. This route
-  /// assumes that the game data has already been loaded.
-  final GameDataService gameDataService;
+  const GameRoute({super.key});
 
   @override
   GameController createState() => GameController();

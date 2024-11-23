@@ -55,7 +55,7 @@ extension WatchOSCommunicationServiceExtension on WatchOSCommunicationService {
         debugPrint('Received message from WatchOS: $message');
 
         // Process the message and prepare a response
-        final Map<String, dynamic> response = _processMessageAndGetResponse(message);
+        final Map<String, dynamic> response = await _processMessageAndGetResponse(message);
 
         // Return a response to the iOS side.
         return response;
@@ -68,11 +68,16 @@ extension WatchOSCommunicationServiceExtension on WatchOSCommunicationService {
     }
   }
 
-  /// Processes the incoming message and returns a response
-  Map<String, dynamic> _processMessageAndGetResponse(Map<String, dynamic> message) {
-    // Implement your business logic here
+  /// Processes the incoming message and returns a response.
+  ///
+  /// This method is called when the Flutter app receives a message from the WatchOS app. It processes the message and
+  /// generates a response based on the message content. The response is then sent back to the WatchOS app.
+  Future<Map<String, dynamic>> _processMessageAndGetResponse(Map<String, dynamic> message) async {
+    // The WatchOS app has requested the current game node.
     if (message['action'] == 'requestCurrentGameNode') {
-      final GameNode? gameNode = GameDataService().currentNode;
+      final GameDataService gameDataService = GameDataService();
+
+      final GameNode? gameNode = gameDataService.currentNode.value;
 
       // If there is a current game node, return it in the response.
       if (gameNode != null) {
@@ -88,6 +93,32 @@ extension WatchOSCommunicationServiceExtension on WatchOSCommunicationService {
           'gameNode': null,
         };
       }
+    }
+
+    // The WatchOS app has requested a new game.
+    else if (message['action'] == 'startNewGame') {
+      // If the game data has not already been loaded, load it.
+      if (!GameDataService().isGameLoaded) {
+        try {
+          await GameDataService().loadGameData();
+        } catch (e) {
+          return {
+            'success': false,
+            'message': 'Failed to load game data: $e',
+          };
+        }
+      }
+
+      // Reset the game in case it was already in progress.
+      GameDataService().startNewGame();
+
+      // Return the initial game node to the WatchOS app.
+      final GameNode initialNode = GameDataService().currentNode.value!;
+
+      return {
+        'success': true,
+        'gameNode': initialNode.toJson(),
+      };
     }
 
     // Handle other actions

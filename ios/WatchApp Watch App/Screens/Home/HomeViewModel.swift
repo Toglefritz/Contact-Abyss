@@ -26,6 +26,11 @@ class HomeViewModel: ObservableObject {
     /// The app-specific communication manager used to interact with the iOS app.
     private var appCommunicationManager: AppSpecificCommunicationManager
     
+    /// A flag to determine the next navigation destination.
+    ///
+    /// - `navigationDestination`: When set to a specific `AppDestination` case, it triggers navigation within the `RootView`.
+    @Published var navigationDestination: AppDestination? = nil
+    
     // MARK: - Initializer
     
     /// Initializes the `HomeViewModel` with an optional `AppSpecificCommunicationManager` dependency.
@@ -49,8 +54,8 @@ class HomeViewModel: ObservableObject {
                 switch result {
                 case .success(let gameNode):
                     if let node = gameNode {
-                        // Notify other parts of the app with the new game node.
-                        NotificationCenter.default.post(name: .didReceiveGameNode, object: node)
+                        // Naigate to the GameView
+                        self?.navigationDestination = .game(node)
                     } else {
                         // Handle the edge case where no game node is returned.
                         self?.errorMessage = "Failed to start a new game."

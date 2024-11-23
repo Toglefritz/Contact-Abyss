@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:contact_abyss/services/game_service/game_data_service.dart';
-import 'package:contact_abyss/services/game_service/models/game_node.dart';
 import 'package:contact_abyss/services/watch_os_communication/watch_os_communication_service_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

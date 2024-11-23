@@ -8,7 +8,21 @@ import 'package:flutter/services.dart';
 ///
 /// This service handles parsing the JSON game data file to construct the n-ary tree of [GameNode]s and provides
 /// methods to navigate through the game based on player decisions.
-class GameDataService {
+class GameDataService with ChangeNotifier {
+  /// The single instance of [GameDataService].
+  ///
+  /// This static property ensures that only one instance of [GameDataService] exists throughout the lifecycle of the
+  /// app.
+  static final GameDataService _instance = GameDataService._internal();
+
+  /// Factory constructor that returns the singleton instance.
+  factory GameDataService() {
+    return _instance;
+  }
+
+  /// A private named constructor to prevent external instantiation.
+  GameDataService._internal();
+
   /// A map of node IDs to their corresponding [GameNode] instances.
   ///
   /// This map represents the entire game structure, allowing quick access to any node using its unique identifier.
@@ -17,13 +31,19 @@ class GameDataService {
   /// The current [GameNode] the player is on.
   ///
   /// This property tracks the player's current position within the game. Storing the `id` of the current node allows
-  /// the player's progress through the game to be saved so that they can resume from where they left off.
-  GameNode? _currentNode;
+  /// the player's progress through the game to be saved so that they can resume from where they left off. This
+  /// member is implemented as a [ValueNotifier] to notify listeners when the current node changes.
+  ValueNotifier<GameNode?> currentNode = ValueNotifier<GameNode?>(null);
 
   /// A history of node IDs representing the path the player has taken.
   ///
   /// This list can be used for features like undoing moves or reviewing the player's journey through the game.
   final List<String> _history = [];
+
+  /// Retrieves the history of node IDs representing the player's path.
+  ///
+  /// This list can be used to review the player's journey or implement features like undoing moves.
+  List<String> get history => List.unmodifiable(_history);
 
   /// The current battery level of the probe, represented as a percentage.
   ///
@@ -31,11 +51,37 @@ class GameDataService {
   /// mission success.
   int _batteryLevel = 100;
 
-  /// Creates an instance of [GameDataService].
+  /// Retrieves the current battery level of the probe.
   ///
-  /// Initializes the service without any loaded game data. Use [_loadGameFromJson] or [loadGameFromAsset] to populate
-  /// the game tree.
-  GameDataService();
+  /// Returns the battery level as an integer percentage.
+  int get batteryLevel => _batteryLevel;
+
+  /// Determines if the game data has been loaded by checking if the list of nodes is not empty.
+  bool get isGameLoaded => _nodes.isNotEmpty;
+
+  /// Loads the game data from a JSON asset file and constructs the n-ary tree. The game data is cached in the [_nodes]
+  /// list so it can be accessed synchronously.
+  ///
+  /// This method reads a JSON file, parses its content, creates [GameNode] instances for each node, and links the
+  /// choices to their respective target nodes. After loading, the current node is set to the node with ID `'start'`.
+  ///
+  /// If the game data is malformed or is missing nodes, this method throws a [FormatException].
+  Future<void> loadGameData() async {
+    // First, load the JSON string from the asset file.
+    final String jsonString;
+    try {
+      jsonString = await rootBundle.loadString('assets/game_data/game_data.json');
+    } catch (e) {
+      throw FlutterError('Failed to load game asset with exception, $e');
+    }
+
+    // Then, parse the JSON string and construct the game tree.
+    try {
+      await _loadGameFromJson(jsonString);
+    } catch (e, s) {
+      throw FlutterError('Failed to load game data with exception, $e; $s');
+    }
+  }
 
   /// Loads the game data from a JSON string and constructs the n-ary tree.
   ///
@@ -80,56 +126,37 @@ class GameDataService {
           throw FormatException("Ending node '${node.id}' does not have an outcome.");
         }
       }
-
-      // Set the current node to the start node. Initialize the history with the start node ID.
-      _currentNode = _nodes['start'];
-      _history
-        ..clear()
-        ..add('start');
     } catch (e) {
       throw FormatException('Failed to load game data: $e');
     }
   }
 
-  /// Loads the game data from a JSON asset file and constructs the n-ary tree.
+  /// Starts a new game.
   ///
-  /// This method reads the JSON file located at [assetPath], parses its content, creates [GameNode] instances for
-  /// each node, and links the choices to their respective target nodes. After loading, the current node is set to the
-  /// node with ID `'start'`.
-  ///
-  /// If the game data is malformed or is missing nodes, this method throws a [FormatException].
-  Future<void> loadGameFromAsset(String assetPath) async {
-    final String jsonString;
-    try {
-      jsonString = await rootBundle.loadString(assetPath);
-    } catch (e) {
-      throw FlutterError('Failed to load game asset with exception, $e');
-    }
+  /// This method resets the game state to the initial start node and sets the battery level to 100%.
+  void startNewGame() {
+    _history
+      ..clear()
+      ..add('start');
 
-    try {
-      await _loadGameFromJson(jsonString);
-    } catch (e, s) {
-      throw FlutterError('Failed to load game data with exception, $e; $s');
-    }
+    // Reset battery level to 100%.
+    _batteryLevel = 100;
+
+    currentNode..value = _nodes['start']
+    ..notifyListeners();
   }
 
-  /// Determines if the game data has been loaded by checking if the list of nodes is not empty.
-  bool get isGameLoaded => _nodes.isNotEmpty;
-
-  /// Retrieves the current [GameNode] the player is on.
+  /// Stops the current game.
   ///
-  /// Returns `null` if no game is loaded.
-  GameNode? get currentNode => _currentNode;
+  /// This method stops the game by setting the current node to null, clearing the player's history, and setting the
+  /// battery level to 100%.
+  void stopGame() {
+    currentNode..value = null
+    ..notifyListeners();
 
-  /// Retrieves the history of node IDs representing the player's path.
-  ///
-  /// This list can be used to review the player's journey or implement features like undoing moves.
-  List<String> get history => List.unmodifiable(_history);
-
-  /// Retrieves the current battery level of the probe.
-  ///
-  /// Returns the battery level as an integer percentage.
-  int get batteryLevel => _batteryLevel;
+    _history.clear();
+    _batteryLevel = 100;
+  }
 
   /// Makes a choice based on the provided [choiceIndex] from the current node.
   ///
@@ -140,17 +167,17 @@ class GameDataService {
   /// is invalid or the current node is `null`, this method returns `false`.
   bool makeChoice(int choiceIndex) {
     // Check if the current node is valid.
-    if (_currentNode == null) {
+    if (currentNode.value == null) {
       return false;
     }
 
     // Check if the choice index is valid.
-    if (choiceIndex < 0 || choiceIndex >= _currentNode!.choices.length) {
+    if (choiceIndex < 0 || choiceIndex >= currentNode.value!.choices.length) {
       return false;
     }
 
     // Retrieve the selected choice and its target node.
-    final Choice selectedChoice = _currentNode!.choices[choiceIndex];
+    final Choice selectedChoice = currentNode.value!.choices[choiceIndex];
     // Find the target node corresponding to the selected choice.
     final GameNode? targetNode = _nodes[selectedChoice.target];
 
@@ -168,23 +195,12 @@ class GameDataService {
     }
 
     // Update the current node and history.
-    _currentNode = targetNode;
+    currentNode..value = targetNode
+    ..notifyListeners();
+
     _history.add(targetNode.id);
 
     return true;
-  }
-
-  /// Resets the game to the initial start node.
-  ///
-  /// This method clears the player's history and sets the current node back to the node with ID `'start'`. It also resets the battery level.
-  void resetGame() {
-    _currentNode = _nodes['start'];
-    _history
-      ..clear()
-      ..add('start');
-
-    // Reset battery level to 100%.
-    _batteryLevel = 100;
   }
 
   /// Retrieves a [GameNode] by its unique [nodeId].
@@ -196,7 +212,7 @@ class GameDataService {
   ///
   /// An end node signifies the conclusion of the game, either through mission success or failure.
   bool isEndNode() {
-    return _currentNode?.isEnd ?? false;
+    return currentNode.value?.isEnd ?? false;
   }
 
   /// Retrieves the total number of nodes in the game.
@@ -204,7 +220,7 @@ class GameDataService {
 
   /// Retrieves all available choices from the current node.
   List<Choice> getAvailableChoices() {
-    return _currentNode?.choices ?? [];
+    return currentNode.value?.choices ?? [];
   }
 
   /// Determines if the probe has sufficient battery to continue the mission.

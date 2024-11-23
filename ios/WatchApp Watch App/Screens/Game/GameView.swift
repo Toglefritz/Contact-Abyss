@@ -18,12 +18,12 @@ import SwiftUI
 /// - Choice buttons are styled with a green background and rounded corners for emphasis.
 struct GameView: View {
     // MARK: - Properties
-
+    
     /// The view model that manages the logic and state for this view.
     @ObservedObject var viewModel: GameViewModel
-
+    
     // MARK: - Body
-
+    
     var body: some View {
         ZStack {
             // Background image for visual consistency
@@ -31,7 +31,12 @@ struct GameView: View {
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
-
+            
+            // Black overlay with 50% opacity
+            Color.black
+                .opacity(0.8)
+                .ignoresSafeArea()
+            
             // Main content in a scrollable container
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
@@ -39,20 +44,21 @@ struct GameView: View {
                     Text(viewModel.gameNode.storyText)
                         .font(.body)
                         .foregroundColor(.white)
-                        .padding()
-
+                        .padding(.horizontal, 24)
+                    
                     // Buttons for available choices
                     ForEach(viewModel.gameNode.choices) { choice in
                         Button(action: {
                             // Handle the selection of a choice
                             viewModel.selectChoice(choice)
                         }) {
-                            Text(choice.choiceText)
-                                .font(.headline)
-                                .padding()
+                            Text("1>" + choice.choiceText)
+                                .font(Font.custom("Kode Mono", size: 18)) // Custom font
+                                .foregroundColor(.clear) // White text for contrast
+                                .padding(.horizontal, 24) // Padding inside the button
+                                .padding(.vertical, 8)
                                 .frame(maxWidth: .infinity) // Stretch button horizontally
-                                .background(Color.green) // Green background for emphasis
-                                .foregroundColor(.white) // White text for contrast
+                                .background(Color.clear) // Green background for emphasis
                                 .cornerRadius(8) // Rounded corners for a polished look
                         }
                     }

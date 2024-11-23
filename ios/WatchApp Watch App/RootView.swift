@@ -2,8 +2,8 @@ import SwiftUI
 
 /// The root view of the WatchOS app that manages and controls the overall navigation flow.
 ///
-/// `RootView` observes the `navigationDestination` property from `LoadingViewModel` to determine
-/// which view to display. It acts as the central hub for switching between different screens
+/// `RootView` listens to the navigation destination from both `LoadingViewModel` and `HomeViewModel`
+/// to determine which view to display. It acts as the central hub for switching between different screens
 /// based on the app's state, ensuring that users are directed to the appropriate interface.
 ///
 /// This approach eliminates the need for a navigation stack within individual views,
@@ -12,12 +12,22 @@ import SwiftUI
 /// - Note: `RootView` uses a `ZStack` to overlay views, but only one child view is active at a time.
 ///   The `.animation` modifier ensures that transitions between views are smooth and visually appealing.
 struct RootView: View {
-    /// An instance of `LoadingViewModel` that manages the state and logic for loading processes.
-    ///
-    /// - `@StateObject`: Initializes and maintains the lifecycle of the view model.
-    ///   This ensures that the view model persists as long as `RootView` exists,
-    ///   and it is only initialized once during the view's lifecycle.
+    // MARK: - Properties
+    
+    /// The `LoadingViewModel` responsible for managing the state during the loading process.
     @StateObject private var loadingViewModel = LoadingViewModel()
+    
+    /// The `HomeViewModel` responsible for managing the state during the home screen.
+    @StateObject private var homeViewModel = HomeViewModel()
+    
+    /// A computed property that determines the current navigation destination.
+    ///
+    /// This property prioritizes the navigation state from `LoadingViewModel` if it is active.
+    private var currentDestination: AppDestination? {
+        homeViewModel.navigationDestination ?? loadingViewModel.navigationDestination
+    }
+    
+    // MARK: - Body
     
     /// The body of the `RootView` which determines which child view to display
     /// based on the current value of `navigationDestination`.
@@ -28,10 +38,10 @@ struct RootView: View {
     var body: some View {
         ZStack {
             // Determines which view to display based on the current navigation destination
-            switch loadingViewModel.navigationDestination {
+            switch currentDestination {
             case .home:
                 // Displays the HomeView when the destination is `.home`
-                HomeView(viewModel: HomeViewModel())
+                HomeView(viewModel: homeViewModel)
                     .transition(.opacity) // Applies a fade-in/out transition
                 
             case .game(let gameNode):

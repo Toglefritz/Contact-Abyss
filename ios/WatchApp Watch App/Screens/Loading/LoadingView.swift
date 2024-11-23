@@ -36,6 +36,7 @@ struct LoadingView: View {
                     .progressViewStyle(CircularProgressViewStyle(tint: .white)) // White circular indicator
                     .foregroundColor(.white) // Ensure text and indicator color contrast against the background
                     .fontWeight(.bold) // Emphasize the "Loading..." text
+                    .font(Font.custom("Kode Mono", size: 16)) // Custom font
             }
         }
         .onAppear {

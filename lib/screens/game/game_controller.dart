@@ -1,17 +1,34 @@
 import 'package:contact_abyss/screens/game/game_route.dart';
 import 'package:contact_abyss/screens/game/game_view.dart';
 import 'package:contact_abyss/screens/home/home_route.dart';
+import 'package:contact_abyss/services/game_service/game_data_service.dart';
 import 'package:contact_abyss/services/game_service/models/game_node.dart';
 import 'package:contact_abyss/services/game_service/models/game_outcome.dart';
 import 'package:flutter/material.dart';
 
 /// A controller for the [GameRoute].
 class GameController extends State<GameRoute> {
+  /// A [GameDataService] instance that provides access to the game data. In this controller, the service is used to
+  /// get information about the current game state and update the game state based on player decisions. This route
+  /// assumes that the game data has already been loaded.
+  final GameDataService gameDataService = GameDataService();
+
+  @override
+  void initState() {
+    // Listen to changes in the current game node from actions performed on the WatchOS app.
+    gameDataService.currentNode.addListener(_onGameNodeChanged);
+
+    super.initState();
+  }
+
   /// A convenience getter for the current game node.
-  GameNode get gameNode => widget.gameDataService.currentNode!;
+  GameNode get gameNode => gameDataService.currentNode.value!;
 
   /// A convenience getter for the current battery level.
-  int get batteryLevel => widget.gameDataService.batteryLevel;
+  int get batteryLevel => gameDataService.batteryLevel;
+
+  /// Handles changes to the current game node.
+  void _onGameNodeChanged() => setState(() {});
 
   /// Returns an [IconData] to be used to indicate the remaining battery level.
   IconData get batteryIcon {
@@ -65,7 +82,7 @@ class GameController extends State<GameRoute> {
   /// Called when the user choose a choice from a game node.
   void makeChoice(int choiceIndex) {
     setState(() {
-      widget.gameDataService.makeChoice(choiceIndex);
+      gameDataService.makeChoice(choiceIndex);
     });
   }
 
@@ -73,9 +90,7 @@ class GameController extends State<GameRoute> {
   void resetGame() {
     // TODO(Toglefritz): Confirm choice to reset game
 
-    setState(() {
-      widget.gameDataService.resetGame();
-    });
+    setState(gameDataService.startNewGame);
   }
 
   /// Returns the user to the main menu.
@@ -89,4 +104,15 @@ class GameController extends State<GameRoute> {
 
   @override
   Widget build(BuildContext context) => GameView(this);
+
+  @override
+  void dispose() {
+    // Stop listening to changes in the current game node.
+    gameDataService.currentNode.removeListener(_onGameNodeChanged);
+
+    // Stop the game.
+    gameDataService.stopGame();
+
+    super.dispose();
+  }
 }
